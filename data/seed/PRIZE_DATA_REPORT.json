@@ -1,0 +1,54 @@
+{
+  "mega645": {
+    "draws": 1372,
+    "first_draw": "2017-10-25",
+    "last_draw": "2026-09-30",
+    "added": 1,
+    "repaired": 0,
+    "game": "mega645",
+    "with_winners": 161,
+    "with_pots": 0,
+    "dropped_non_draw_dates": 0,
+    "stale_records": 0,
+    "realigned": 0,
+    "number_mismatches": [],
+    "sources": {
+      "compal123": 161
+    }
+  },
+  "power655": {
+    "draws": 1404,
+    "first_draw": "2017-08-01",
+    "last_draw": "2026-09-29",
+    "added": 1,
+    "repaired": 1,
+    "game": "power655",
+    "with_winners": 1394,
+    "with_pots": 1376,
+    "dropped_non_draw_dates": 31,
+    "stale_records": 26,
+    "realigned": 26,
+    "number_mismatches": [],
+    "sources": {
+      "leoodz": 1235,
+      "compal123": 159
+    }
+  },
+  "lotto535": {
+    "draws": 918,
+    "first_draw": "2025-06-29",
+    "last_draw": "2026-09-30",
+    "added": 80,
+    "repaired": 0,
+    "game": "lotto535",
+    "with_winners": 917,
+    "with_pots": 0,
+    "dropped_non_draw_dates": 0,
+    "stale_records": 0,
+    "realigned": 0,
+    "number_mismatches": [],
+    "sources": {
+      "compal123": 917
+    }
+  }
+}

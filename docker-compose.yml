@@ -1,0 +1,74 @@
+name: vietlott-quant-engine
+
+services:
+  api:
+    build: .
+    image: vietlott-quant-engine:latest
+    ports:
+      - "8000:8000"
+    environment:
+      VQE_SOURCE: auto                   # vietlott (Vietnamese IP only) → nhanaz → github_mirror (README §1.7)
+      VQE_SYNC_ON_STARTUP: "true"        # incremental sync after seeding from the bundled snapshot
+      VQE_LOG_LEVEL: INFO
+    volumes:
+      - vqe-data:/app/data               # DuckDB file + Parquet exports
+    restart: unless-stopped
+
+  # Periodic incremental sync through the API (the API process owns the DuckDB file,
+  # so writers go through it instead of opening the database concurrently).
+  scheduler:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      SYNC_EVERY_SECONDS: "21600"        # 6 h; Mega/Power/Max 3D ~18:00 ICT, Lotto 13:00 and 21:00, Keno/Bingo18 all day
+      PRIZE_SOURCE: auto                 # auto = vietlott → canonical → nhanaz (→ v130); or one of them
+      PRODUCT_SOURCE: auto               # auto = vietlott → nhanaz → mirror/canonical (→ v130)
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          for g in mega645 power655 lotto535; do
+            curl -fsS -X POST "http://api:8000/games/$$g/sync" -H 'Content-Type: application/json' -d '{}' || echo "sync $$g failed"
+            curl -fsS -X POST "http://api:8000/games/$$g/prizes/sync" -H 'Content-Type: application/json' -d "{\"source\": \"$$PRIZE_SOURCE\"}" || echo "prize sync $$g failed"
+          done
+          for p in keno bingo18 max3d max3dpro; do  # max4d is an archive (no new draws)
+            curl -fsS -X POST "http://api:8000/products/$$p/sync" -H 'Content-Type: application/json' -d "{\"source\": \"$$PRODUCT_SOURCE\"}" || echo "product sync $$p failed"
+          done
+          # self-learning forecaster (v3.5): learn the new draws, score past forecasts, record the next one
+          for p in mega645 power655 lotto535 keno bingo18 max3d max3dpro; do
+            curl -fsS "http://api:8000/forecast/$$p?record=true" > /dev/null || echo "forecast $$p failed"
+          done
+          sleep "$$SYNC_EVERY_SECONDS"
+        done
+    restart: unless-stopped
+
+  # One-off research job: `docker compose --profile jobs run --rm backtest`
+  backtest:
+    image: vietlott-quant-engine:latest
+    profiles: ["jobs"]
+    environment:
+      VQE_DATA_DIR: /app/jobdata         # separate DuckDB file: never contends with the API's lock
+    volumes:
+      - ./reports:/app/reports
+    command:
+      - /bin/sh
+      - -c
+      - |
+        vietlott sync --game all --source file --path /app/seed &&
+        (vietlott sync --game all || echo "online sync failed, using bundled snapshot") &&
+        (vietlott prizes --game all --source auto || echo "online prize sync failed, using bundled prize data") &&
+        (vietlott products sync --source auto || echo "product sync failed, using bundled histories") &&
+        vietlott market --out /app/reports/calibration &&
+        VQE_CALIBRATION_DIR=/app/reports/calibration python scripts/market_report.py &&
+        python scripts/bao_report.py &&
+        python scripts/products_report.py &&
+        vietlott products analyze --product all &&
+        vietlott analyze --game all &&
+        vietlott inference --game all --out /app/reports &&
+        vietlott backtest --game all --tickets 5 --out /app/reports
+
+volumes:
+  vqe-data:

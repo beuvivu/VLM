@@ -1,0 +1,344 @@
+{
+  "policy": "official records first; lower layers only add missing draw ids; every disagreement listed",
+  "products": {
+    "mega645": {
+      "canonical_records": 1569,
+      "nhanaz": {
+        "rows": 1569,
+        "draws_common": 1569,
+        "draws_identical": 1569,
+        "prizes_common": 1569,
+        "winners_identical": 1569,
+        "pots_identical": 1569,
+        "pot_conflicts": [],
+        "added_draws": [],
+        "added_by_origin": {}
+      },
+      "v130": {
+        "rows": 1569,
+        "draws_common": 1569,
+        "draws_identical": 1569,
+        "prizes_common": 1569,
+        "winners_identical": 1569,
+        "pots_identical": 1569,
+        "pot_conflicts": [],
+        "added_draws": [],
+        "added_by_origin": {}
+      }
+    },
+    "power655": {
+      "canonical_records": 1405,
+      "nhanaz": {
+        "rows": 1405,
+        "draws_common": 1405,
+        "draws_identical": 1405,
+        "prizes_common": 1405,
+        "winners_identical": 1405,
+        "pots_identical": 1405,
+        "pot_conflicts": [],
+        "added_draws": [],
+        "added_by_origin": {}
+      },
+      "v130": {
+        "rows": 1405,
+        "draws_common": 1405,
+        "draws_identical": 1405,
+        "prizes_common": 1405,
+        "winners_identical": 1405,
+        "pots_identical": 1405,
+        "pot_conflicts": [],
+        "added_draws": [],
+        "added_by_origin": {}
+      }
+    },
+    "lotto535": {
+      "canonical_records": 919,
+      "nhanaz": {
+        "rows": 920,
+        "draws_common": 919,
+        "draws_identical": 919,
+        "prizes_common": 919,
+        "winners_identical": 919,
+        "pots_identical": 918,
+        "pot_conflicts": [
+          {
+            "draw_id": 874,
+            "origin": "xosominhngoc_net_vn",
+            "kept_official": {
+              "jackpot1": 30222001000
+            },
+            "other": {
+              "jackpot1": 35959161000
+            }
+          }
+        ],
+        "added_draws": [
+          920
+        ],
+        "added_by_origin": {
+          "xosominhngoc_net_vn": 1
+        }
+      },
+      "v130": {
+        "rows": 920,
+        "draws_common": 920,
+        "draws_identical": 920,
+        "prizes_common": 920,
+        "winners_identical": 920,
+        "pots_identical": 919,
+        "pot_conflicts": [
+          {
+            "draw_id": 874,
+            "origin": "xosominhngoc_net_vn",
+            "kept_official": {
+              "jackpot1": 30222001000
+            },
+            "other": {
+              "jackpot1": 35959161000
+            }
+          }
+        ],
+        "added_draws": [],
+        "added_by_origin": {}
+      }
+    },
+    "max3d": {
+      "layers": [
+        {
+          "layer": "vietlott.vn/detail",
+          "rows": 1139,
+          "overlap_with_higher_layers": 0,
+          "identical": 0,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 1139,
+          "added_by_origin": {
+            "unknown": 1139
+          }
+        },
+        {
+          "layer": "nhanaz",
+          "rows": 1139,
+          "overlap_with_higher_layers": 1139,
+          "identical": 1139,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        },
+        {
+          "layer": "vietlott.vn/list",
+          "rows": 1133,
+          "overlap_with_higher_layers": 1133,
+          "identical": 1133,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        },
+        {
+          "layer": "v130",
+          "rows": 1139,
+          "overlap_with_higher_layers": 1139,
+          "identical": 1139,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        }
+      ],
+      "final_rows": 1139,
+      "origin_mix": {
+        "vietlott.vn/detail": 1139
+      },
+      "not_confirmed_excluded": 0
+    },
+    "max3dpro": {
+      "layers": [
+        {
+          "layer": "vietlott.vn/detail",
+          "rows": 786,
+          "overlap_with_higher_layers": 0,
+          "identical": 0,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 786,
+          "added_by_origin": {
+            "unknown": 786
+          }
+        },
+        {
+          "layer": "nhanaz",
+          "rows": 786,
+          "overlap_with_higher_layers": 786,
+          "identical": 786,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        },
+        {
+          "layer": "vietlott.vn/list",
+          "rows": 780,
+          "overlap_with_higher_layers": 780,
+          "identical": 780,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        },
+        {
+          "layer": "v130",
+          "rows": 786,
+          "overlap_with_higher_layers": 786,
+          "identical": 786,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        }
+      ],
+      "final_rows": 786,
+      "origin_mix": {
+        "vietlott.vn/detail": 786
+      },
+      "not_confirmed_excluded": 0
+    },
+    "keno": {
+      "layers": [
+        {
+          "layer": "vietlott.vn/list",
+          "rows": 86272,
+          "overlap_with_higher_layers": 0,
+          "identical": 0,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 86272,
+          "added_by_origin": {
+            "unknown": 86272
+          }
+        },
+        {
+          "layer": "nhanaz",
+          "rows": 293672,
+          "overlap_with_higher_layers": 82546,
+          "identical": 82546,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 211126,
+          "added_by_origin": {
+            "xoso_com_vn_archive": 210227,
+            "onbit_archive": 708,
+            "xosominhngoc_net_vn": 190,
+            "ketquaday_detail": 1
+          }
+        },
+        {
+          "layer": "v130",
+          "rows": 297352,
+          "overlap_with_higher_layers": 297352,
+          "identical": 297352,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        }
+      ],
+      "final_rows": 297398,
+      "origin_mix": {
+        "nhanaz:xoso_com_vn_archive": 210227,
+        "vietlott.vn/list": 86272,
+        "nhanaz:onbit_archive": 708,
+        "nhanaz:xosominhngoc_net_vn": 190,
+        "nhanaz:ketquaday_detail": 1
+      },
+      "not_confirmed_excluded": 31
+    },
+    "bingo18": {
+      "layers": [
+        {
+          "layer": "vietlott.vn/list",
+          "rows": 92759,
+          "overlap_with_higher_layers": 0,
+          "identical": 0,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 92759,
+          "added_by_origin": {
+            "unknown": 92759
+          }
+        },
+        {
+          "layer": "nhanaz",
+          "rows": 98814,
+          "overlap_with_higher_layers": 85980,
+          "identical": 85980,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 12834,
+          "added_by_origin": {
+            "unknown": 11703,
+            "official_vietlott": 936,
+            "xosominhngoc_net_vn": 195
+          }
+        },
+        {
+          "layer": "v130",
+          "rows": 105548,
+          "overlap_with_higher_layers": 105548,
+          "identical": 105548,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        }
+      ],
+      "final_rows": 105593,
+      "origin_mix": {
+        "vietlott.vn/list": 92759,
+        "nhanaz:unknown": 11703,
+        "nhanaz:official_vietlott": 936,
+        "nhanaz:xosominhngoc_net_vn": 195
+      },
+      "not_confirmed_excluded": 30
+    },
+    "max4d": {
+      "layers": [
+        {
+          "layer": "nhanaz",
+          "rows": 722,
+          "overlap_with_higher_layers": 0,
+          "identical": 0,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 722,
+          "added_by_origin": {
+            "official_vietlott": 722
+          }
+        },
+        {
+          "layer": "v130",
+          "rows": 722,
+          "overlap_with_higher_layers": 722,
+          "identical": 722,
+          "conflicts": 0,
+          "conflict_examples": [],
+          "added": 0,
+          "added_by_origin": {}
+        }
+      ],
+      "final_rows": 722,
+      "origin_mix": {
+        "nhanaz:official_vietlott": 722
+      },
+      "not_confirmed_excluded": 0
+    }
+  },
+  "exclusions": {
+    "count": 63,
+    "by_product": {
+      "keno": 31,
+      "bingo18": 32
+    }
+  }
+}

@@ -1,0 +1,8 @@
+[
+  {"game": "mega645", "draw_id": 1569, "value": 158758806000, "kind": "exact", "source": "Thanh Niên 30/09/2026 'Kết quả xổ số Vietlott Mega 6/45 tối 30.9, giải độc đắc cộng dồn 158,7 tỉ đồng' (also Compal123 jackpots.json 2026-10-01)"},
+  {"game": "mega645", "draw_id": 1565, "value": 96000000000, "kind": "lower_bound", "source": "Tuổi Trẻ 23/09/2026 'Jackpot xổ số Mega 6/45 tiến sát 100 tỉ đồng' — 'đã vượt 96 tỉ đồng' at draw #01565"},
+  {"game": "lotto535", "draw_id": 38, "value": 16500000000.0, "kind": "derived", "source": "CafeF 29/07/2025: kỳ chia giải 17/07/2025 không có Giải Nhất, 24 vé Giải Nhì nhận ~177 triệu ⇒ Độc đắc ≈ 4 × 24 × 172 triệu (Vietstock: 'hơn 13,5 tỷ' lúc công bố)"},
+  {"game": "lotto535", "draw_id": 54, "value": 19900000000.0, "kind": "approx", "source": "CafeF 29/07/2025: kỳ 25/07/2025 Độc đắc gần 20 tỷ; 10 vé Giải Nhất hơn 672 triệu (= 1/3), Giải Tư ~2,7 triệu, Giải Năm 220.000 đ"},
+  {"game": "lotto535", "draw_id": 146, "value": 21000000000.0, "kind": "approx", "source": "Tuổi Trẻ 19/09/2025, Thanh Niên 30/09/2025: kỳ #00146 (09/09/2025) chia hơn 21 tỷ; 3 Giải Nhất hơn 2 tỷ, 35 Giải Nhì hơn 100 triệu, Giải Năm 205.000 đ"},
+  {"game": "lotto535", "draw_id": 488, "value": 11800000000.0, "kind": "approx", "source": "Tuổi Trẻ 28/02/2026: Độc đắc gần 12 tỷ sau kỳ #00488, 20 kỳ chưa có người trúng từ 17/02/2026 (validation only: not a rolldown draw)"}
+]

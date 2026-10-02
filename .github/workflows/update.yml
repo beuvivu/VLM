@@ -1,0 +1,114 @@
+name: Cập nhật dữ liệu, dự báo và trang
+
+# Hai lần mỗi ngày (giờ Việt Nam). Cron của GitHub có thể trễ vài giờ; bước ghi sổ tự kiểm tra
+# lịch quay và chỉ ghi dự báo cho kỳ CHƯA quay (README mục 1.9).
+#   22:40 — sau kỳ Lotto 21:00 và khi Keno/Bingo18 đã quay xong ngày: dự báo cho các kỳ ngày mai.
+#   10:10 — trước kỳ Lotto 13:00 và các kỳ 18:00.
+on:
+  schedule:
+    - cron: "40 15 * * *"
+    - cron: "10 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: vietlott-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      VQE_LOG_LEVEL: WARNING
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Cài gói
+        run: python -m pip install -e .
+
+      # Kho kết quả, kỳ đã đồng bộ và trạng thái bộ dự báo được giữ giữa các lần chạy bằng cache.
+      # Mất cache cũng không sao: bước sau dựng lại từ dữ liệu đi kèm + nguồn, và bộ dự báo học lại
+      # cho đúng kết quả cũ (học tăng dần = học một lần). Chỉ sổ dự báo nằm trong repo.
+      - name: Khôi phục trạng thái
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            data/vietlott.duckdb*
+            data/parquet
+            data/products
+            data/forecast/*.json
+          key: vqe-state-${{ github.run_id }}
+          restore-keys: vqe-state-
+
+      - name: Nạp dữ liệu đi kèm (không làm gì nếu đã có)
+        run: vietlott init --skip-forecast --offline
+
+      - name: Đồng bộ (vietlott.vn → kho cộng đồng → bản sao GitHub)
+        run: |
+          vietlott sync --game all --source auto > sync.json || echo "::warning::đồng bộ Mega/Power/Lotto lỗi — dùng dữ liệu đã có"
+          vietlott prizes --game all > prizes.json || echo "::warning::đồng bộ bảng giải lỗi — dùng dữ liệu đã có"
+          vietlott products sync > products.json || echo "::warning::đồng bộ Keno/Bingo18/Max 3D lỗi — dùng dữ liệu đã có"
+
+      - name: Học kỳ mới, chấm sổ, ghi dự báo cho kỳ chưa quay
+        run: vietlott forecast next --product all
+
+      - name: Ghi sổ dự báo vào repo
+        run: |
+          if [ -n "$(git status --porcelain -- data/forecast/ledger.jsonl)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/forecast/ledger.jsonl
+            git commit -m "data: sổ dự báo $(TZ=Asia/Ho_Chi_Minh date +%F' '%H:%M) [skip ci]"
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase --autostash && git push; then ok=1; break; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error::không đẩy được sổ dự báo lên repo"; exit 1; }
+          else
+            echo "Sổ dự báo không đổi."
+          fi
+
+      - name: Dựng trang
+        run: python scripts/build_site.py --out site
+
+      - name: Lưu trạng thái
+        if: always()
+        continue-on-error: true
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            data/vietlott.duckdb*
+            data/parquet
+            data/products
+            data/forecast/*.json
+          key: vqe-state-${{ github.run_id }}
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          name: github-pages-${{ github.run_attempt }}
+          path: site
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Triển khai lên GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}

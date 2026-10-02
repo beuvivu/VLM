@@ -1,0 +1,33 @@
+name: Phát hành
+
+# Đẩy tag dạng v4.0.0 → GitHub Release kèm gói cài đặt (zip mã nguồn + dữ liệu đi kèm), wheel và sdist.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Kiểm tra phiên bản khớp tag
+        run: |
+          v=$(PYTHONPATH=src python -c "import vietlott_engine; print(vietlott_engine.__version__)")
+          test "v$v" = "$GITHUB_REF_NAME" || { echo "::error::src/vietlott_engine/__init__.py là $v, tag là $GITHUB_REF_NAME"; exit 1; }
+      - name: Wheel và sdist
+        run: python -m pip install build && python -m build
+      - name: Gói cài đặt (zip)
+        run: |
+          name="vietlott-quant-engine-${GITHUB_REF_NAME#v}"
+          git archive --format=zip --prefix="$name/" -o "dist/$name.zip" HEAD
+      - name: Tạo Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --title "Vietlott Quant Engine $GITHUB_REF_NAME" --generate-notes

@@ -1,0 +1,34 @@
+
+=== Mega 6/45: 1371 draws (2017-10-25 → 2026-09-27) ===
+  frequency_chi_square     stat=    33.310  p=0.8800  q=0.904
+  shannon_entropy          stat=     5.489  p=0.8756  q=0.904
+  odd_count                stat=     3.140  p=0.7911  q=0.904
+  low_count                stat=     4.477  p=0.6123  q=0.904
+  sum_distribution         stat=   122.925  p=0.3596  q=0.904
+  consecutive_pairs        stat=     6.449  p=0.0917  q=0.825
+  repeat_from_previous     stat=     0.569  p=0.9035  q=0.904
+  runs_sum                 stat=     0.603  p=0.5463  q=0.904
+  ljung_box_sum            stat=    12.328  p=0.2637  q=0.904
+  → No evidence against H0 (independent uniform draws) at FDR 5% across 9 tests.
+  gaps: geometric fit p=0.660; hazard by gap = 0:0.132, 1:0.141, 2:0.136, 3:0.138, 4:0.133, 5:0.129 … (constant ⇒ no 'overdue' effect)
+  pairs: 0 significant at FDR 5%; over-dispersion p=0.994
+  Dirichlet: log BF(heterogeneous vs uniform)=-103.6; empirical-Bayes α₀=100000
+  predictive gain vs k/n: -0.0451 nats/draw (t=-5.24)
+  Markov: transition dependence p=0.172; sum_tercile MI=0.0020 bits (p=0.44), odd_count MI=0.0036 bits (p=0.15), repeats_from_previous MI=0.0023 bits (p=0.35)
+
+=== Power 6/55: 1402 draws (2017-08-01 → 2026-09-26) ===
+  frequency_chi_square     stat=    58.485  p=0.3142  q=0.539
+  shannon_entropy          stat=     5.777  p=0.3038  q=0.539
+  odd_count                stat=    10.650  p=0.0998  q=0.335
+  low_count                stat=    10.326  p=0.1116  q=0.335
+  sum_distribution         stat=   138.209  p=0.4790  q=0.539
+  consecutive_pairs        stat=     8.698  p=0.0336  q=0.302
+  repeat_from_previous     stat=     3.070  p=0.3809  q=0.539
+  runs_sum                 stat=    -0.186  p=0.8528  q=0.853
+  ljung_box_sum            stat=     9.669  p=0.4700  q=0.539
+  → No evidence against H0 (independent uniform draws) at FDR 5% across 9 tests.
+  gaps: geometric fit p=0.918; hazard by gap = 0:0.110, 1:0.111, 2:0.100, 3:0.109, 4:0.109, 5:0.110 … (constant ⇒ no 'overdue' effect)
+  pairs: 0 significant at FDR 5%; over-dispersion p=0.073
+  Dirichlet: log BF(heterogeneous vs uniform)=-113.8; empirical-Bayes α₀=100000
+  predictive gain vs k/n: -0.0484 nats/draw (t=-5.74)
+  Markov: transition dependence p=0.940; sum_tercile MI=0.0002 bits (p=0.98), odd_count MI=0.0009 bits (p=0.80), repeats_from_previous MI=0.0007 bits (p=0.85)

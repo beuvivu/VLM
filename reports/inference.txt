@@ -1,0 +1,14 @@
+
+=== Mega 6/45: 1371 draws (2017-10-25 → 2026-09-27) ===
+  • Per-number: most deviant is 17 (z = -1.73); Westfall–Young FWER-adjusted p = 0.98 — not significant after accounting for all numbers.
+  • With 1371 draws the frequency test detects one number running 37% hot (or every number off by ±5.6%) with 80% power. At the 95% level every number's inclusion probability is certified to lie within ±22.5% of k/n = 0.1333 (intersection–union TOST). Even if the six most favourable numbers sat at their upper bounds, a ticket's return-to-player (min jackpot, fixed prizes) would rise from 27.0% to at most 80.3%.
+  • Data favour a fair machine over a material spread (≥5% of k/n) by 10^3.0:1. Between-number spread of inclusion rates: posterior median 0.5% of k/n, 95% upper bound 2.5%. Raw hot/cold deviations are shrunk by ~98% toward k/n. Playing the six best pooled numbers is worth RTP 27.26% vs 26.96% for any ticket (95% upper case: 32.96%).
+  • Betting on history never came close to the 20× rejection threshold (best: 10^0.14×). Final wealth: frequency bettor 10^-0.47, serial bettor 10^-0.64. Anytime-valid p = 0.72; this test stays valid when re-run after every new draw.
+  • Most unusual 52-draw window: 2023-02-15 → 2023-06-14 (scan-adjusted p = 0.46); largest rate shift: number 20 around 2022-01-21 (p = 0.43). No regime with a detectable local bias.
+
+=== Power 6/55: 1402 draws (2017-08-01 → 2026-09-26) ===
+  • Per-number: most deviant is 4 (z = -2.48); Westfall–Young FWER-adjusted p = 0.56 — not significant after accounting for all numbers.
+  • With 1402 draws the frequency test detects one number running 43% hot (or every number off by ±5.8%) with 80% power. At the 95% level every number's inclusion probability is certified to lie within ±31.3% of k/n = 0.1091 (intersection–union TOST). Even if the six most favourable numbers sat at their upper bounds, a ticket's return-to-player (min jackpot, fixed prizes) would rise from 28.1% to at most 101.0%.
+  • Data favour a fair machine over a material spread (≥5% of k/n) by 10^1.6:1. Between-number spread of inclusion rates: posterior median 0.7% of k/n, 95% upper bound 4.1%. Raw hot/cold deviations are shrunk by ~95% toward k/n. Playing the six best pooled numbers is worth RTP 28.93% vs 28.08% for any ticket (95% upper case: 39.38%).
+  • Betting on history never came close to the 20× rejection threshold (best: 10^0.27×). Final wealth: frequency bettor 10^-0.47, serial bettor 10^-1.04. Anytime-valid p = 0.54; this test stays valid when re-run after every new draw.
+  • Most unusual 52-draw window: 2026-01-01 → 2026-05-02 (scan-adjusted p = 0.78); largest rate shift: number 13 around 2022-06-14 (p = 0.72). No regime with a detectable local bias.

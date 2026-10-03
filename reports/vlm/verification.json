@@ -7,7 +7,7 @@
     "skipped": 1,
     "passed": 262,
     "command": "python -m pytest -ra",
-    "seconds": 104.423
+    "seconds": 103.602
   },
   "ruff": {
     "command": "ruff check --select F,B023 src scripts tests",
@@ -46,5 +46,11 @@
   "review": {
     "result": "All eight source/repair findings resolved; final delta has no code blockers",
     "focused_tests_passed": 85
+  },
+  "optional_crawler_extra": {
+    "check": "Simulated absence of curl_cffi; transport tests",
+    "passed": 6,
+    "skipped": 1,
+    "failures": 0
   }
 }

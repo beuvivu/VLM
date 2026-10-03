@@ -97,7 +97,7 @@ def test_retry_after_beyond_budget_fails_without_early_retry():
 
 def test_curl_decompressed_response_is_not_decompressed_twice(monkeypatch):
     from types import SimpleNamespace
-    from curl_cffi.requests import AsyncSession
+    AsyncSession = pytest.importorskip('curl_cffi.requests').AsyncSession
     async def request(self,*args,**kwargs):
         return SimpleNamespace(status_code=200,content=b'{"ok":true}',
                                headers={'Content-Encoding':'gzip','Content-Type':'application/json','Content-Length':'99'})

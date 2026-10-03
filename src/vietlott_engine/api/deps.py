@@ -27,6 +27,7 @@ class AppState:
     updater: object | None = None
     _journal_seen: dict[tuple[str, int], tuple] | None = None
     replay_conflicts: list[dict] = field(default_factory=list)
+    _ml_jobs: dict[str, asyncio.Task] = field(default_factory=dict)
 
     def sync_lock(self, product: str) -> asyncio.Lock:
         """One in-flight sync per product, shared by HTTP and periodic updates."""

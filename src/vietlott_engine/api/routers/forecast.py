@@ -6,7 +6,6 @@ draws (about a minute) — run ``vietlott forecast fit`` once to prepare the sta
 
 from __future__ import annotations
 
-import threading
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -17,9 +16,9 @@ from vietlott_engine.core.products import ProductCode, get_product
 from vietlott_engine.forecast.data import load_series
 from vietlott_engine.forecast.engine import ForecastReport, record, refresh, scoreboard
 from vietlott_engine.forecast.schedule import record_window
+from vlm.forecast.service import forecast_guard
 
 router = APIRouter(prefix="/forecast", tags=["forecast"])
-_LOCK = threading.Lock()
 
 
 class FitSummary(BaseModel):
@@ -58,7 +57,7 @@ def _series(state: AppState, code: ProductCode):  # type: ignore[no-untyped-def]
 
 def _refresh(state: AppState, code: ProductCode, refit: bool = False, last: int | None = None, series=None):  # type: ignore[no-untyped-def]
     series = series if series is not None else _series(state, code)
-    with _LOCK:
+    with forecast_guard(_dir(state)):
         return refresh(code, series, _dir(state), refit=refit, last=last)
 
 
@@ -67,15 +66,16 @@ def next_draw(product: str, record_forecast: bool = Query(False, alias="record",
     """Learn any new draws, then forecast the next one (probabilities, picks, evidence, verdict).
     With ``record=true`` the forecast goes to the ledger only if its draw has not started yet."""
     code = _code(product)
-    series = _series(state, code)
-    f, _, _ = _refresh(state, code, series=series)
-    rep = f.forecast()
-    if record_forecast:
-        ok, note, target = record_window(code, series.dates)
-        if ok:
-            record(_dir(state), rep, pre_draw=True, target_time=target.isoformat() if target else None)
-        rep.recorded, rep.record_note = ok, note if ok else f"không ghi vào sổ: {note}"
-    return rep
+    with forecast_guard(_dir(state)):
+        series = _series(state, code)
+        f, _, _ = _refresh(state, code, series=series)
+        rep = f.forecast()
+        if record_forecast:
+            ok, note, target = record_window(code, series.dates)
+            if ok:
+                record(_dir(state), rep, pre_draw=True, target_time=target.isoformat() if target else None)
+            rep.recorded, rep.record_note = ok, note if ok else f"không ghi vào sổ: {note}"
+        return rep
 
 
 @router.post("/{product}/fit", response_model=FitSummary)

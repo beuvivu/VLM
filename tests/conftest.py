@@ -15,6 +15,7 @@ def _ignore_local_dotenv():  # type: ignore[no-untyped-def]
         patch.setitem(_config.Settings.model_config, "env_file", None)
         # Offline tests opt out of the production background crawler.
         patch.setenv('VQE_AUTO_UPDATE_ENABLED', 'false')
+        patch.setenv('VQE_ML_AUTO_UPDATE_ENABLED', 'false')
         _config.get_settings.cache_clear()
         yield
         _config.get_settings.cache_clear()

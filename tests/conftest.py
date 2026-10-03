@@ -8,10 +8,22 @@ from vietlott_engine.core.games import MEGA_645, POWER_655, GameSpec
 from vietlott_engine.core.history import DrawHistory
 
 
+@pytest.fixture(autouse=True, scope="session")
+def _ignore_local_dotenv():  # type: ignore[no-untyped-def]
+    """The installers write a .env for the user; tests must not depend on it.
+
+    Session scope: module-scoped fixtures (the API client in test_api.py) build their Settings
+    before any function-scoped fixture runs, so a function-scoped guard came too late.
+    """
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setitem(_config.Settings.model_config, "env_file", None)
+        _config.get_settings.cache_clear()
+        yield
+    _config.get_settings.cache_clear()
+
+
 @pytest.fixture(autouse=True)
-def _ignore_local_dotenv(monkeypatch: pytest.MonkeyPatch):  # type: ignore[no-untyped-def]
-    """The installers write a .env for the user; tests must not depend on it."""
-    monkeypatch.setitem(_config.Settings.model_config, "env_file", None)
+def _fresh_settings():  # type: ignore[no-untyped-def]
     _config.get_settings.cache_clear()
     yield
     _config.get_settings.cache_clear()

@@ -14,11 +14,16 @@ on:
       - "requirements*.txt"
       - "src/vietlott_engine/cli.py"
       - "src/vietlott_engine/paths.py"
+      - "tests/conftest.py"
       - ".github/workflows/installer.yml"
   pull_request:
     paths:
       - "install.*"
       - "pyproject.toml"
+      - "requirements*.txt"
+      - "src/vietlott_engine/cli.py"
+      - "src/vietlott_engine/paths.py"
+      - "tests/conftest.py"
       - ".github/workflows/installer.yml"
   schedule:
     - cron: "25 2 * * 1"

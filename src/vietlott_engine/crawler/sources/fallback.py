@@ -13,6 +13,7 @@ snapshot to the ``DrawSource`` interface used by ``SyncPipeline`` for Mega / Pow
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass, field
 
 from vietlott_engine.core.exceptions import SourceError
@@ -77,23 +78,31 @@ class ArchiveDrawSource(DrawSource):
 class FallbackDrawSource(DrawSource):
     name = "auto"
 
-    def __init__(self, sources: list[DrawSource]) -> None:
+    def __init__(self, sources: list[DrawSource], source_timeout_s: float = 20) -> None:
         if not sources:
             raise ValueError("no sources")
         self.sources = sources
+        self.source_timeout_s = source_timeout_s
         self.log = FallbackLog()
 
     async def fetch(self, spec: GameSpec, since_id: int | None = None) -> FetchResult:
         self.log = FallbackLog()
+        empty = None
         for src in self.sources:
             try:
-                res = await src.fetch(spec, since_id)
-            except (SourceError, OSError, KeyError, ValueError) as exc:
-                msg = str(exc).splitlines()[0][:300]
+                res = await asyncio.wait_for(src.fetch(spec, since_id), self.source_timeout_s)
+            except (SourceError, OSError, KeyError, ValueError, TimeoutError) as exc:
+                msg = (str(exc).splitlines() or [type(exc).__name__])[0][:300]
                 log.warning("%s: source %s failed (%s); trying the next one", spec.code.value, src.name, msg)
                 self.log.attempts.append(Attempt(src.name, False, error=msg))
+                continue
+            if not res.draws:
+                self.log.attempts.append(Attempt(src.name, False, error='no newer draws'))
+                empty = empty or res
                 continue
             self.log.attempts.append(Attempt(src.name, True, rows=len(res.draws)))
             self.name = f"auto:{src.name}"
             return res
+        if empty is not None:
+            return empty  # empty is legitimate, but must not hide a newer fallback
         raise SourceError("all sources failed: " + "; ".join(f"{a.source}: {a.error}" for a in self.log.attempts))

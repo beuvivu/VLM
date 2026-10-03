@@ -15,7 +15,6 @@ from vietlott_engine.analytics.products import DigitReplication, ProductRandomne
 from vietlott_engine.api.deps import AppState, get_state
 from vietlott_engine.api.schemas import ProductSyncRequest
 from vietlott_engine.core.products import DIGIT_PRODUCTS, PRODUCT_INFO, SEED_FILES, ProductCode, get_product
-from vietlott_engine.crawler.pipeline import build_http_client
 from vietlott_engine.game_theory.fastgames import BingoBetOdds, KenoBacOdds, SideBetOdds, bingo18_odds, keno_odds
 
 router = APIRouter(prefix="/products", tags=["products"])
@@ -125,17 +124,8 @@ async def randomness(product: str, state: AppState = Depends(get_state)) -> Prod
 @router.post("/{product}/sync")
 async def sync(product: str, body: ProductSyncRequest | None = None, state: AppState = Depends(get_state)) -> dict:
     """Fetch new draws (mirror / canonical / vietlott.vn) into the local product store."""
-    from vietlott_engine.crawler.product_store import ProductSyncPipeline
+    from vlm.updates.service import sync_product
 
     code = _code(product)
     body = body or ProductSyncRequest()
-    s = state.settings
-    async with build_http_client(s) as client:
-        pipe = ProductSyncPipeline(
-            client, state.product_store(), vietlott_base_url=s.vietlott_base_url, mirror_base_url=s.product_mirror_base_url,
-            canonical_base_url=s.canonical_base_url, bootstrap_cookie=s.vietlott_cookie_bootstrap, pages_per_batch=s.max_concurrency,
-            nhanaz_base_url=s.nhanaz_base_url, nhanaz_dir=s.nhanaz_dir, v130_dir=s.v130_dir, fallback_order=s.fallback_order,
-        )
-        report = await pipe.run(code, body.source, body.max_pages, body.full)
-    state.invalidate_product(code)
-    return report.to_dict()
+    return await sync_product(state, code, source=body.source, max_pages=body.max_pages, full=body.full)

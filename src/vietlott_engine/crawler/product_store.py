@@ -20,6 +20,7 @@ Sources (``--source``):
 
 from __future__ import annotations
 
+import asyncio
 import json
 import time
 from dataclasses import asdict, dataclass, field
@@ -152,6 +153,7 @@ class ProductSyncPipeline:
         nhanaz_dir: Path | None = None,
         v130_dir: Path | None = None,
         fallback_order: list[str] | None = None,
+        source_timeout_s: float = 20,
     ) -> None:
         from vietlott_engine.crawler.sources.nhanaz import NHANAZ_RAW_BASE
 
@@ -167,6 +169,7 @@ class ProductSyncPipeline:
         self.v130_dir = v130_dir
         self.fallback_order = [SOURCE_ALIASES.get(s, s) for s in (fallback_order or ["vietlott", "nhanaz", "mirror", "canonical", "v130"])]
         self._pending_exclusions: list[dict] = []
+        self.source_timeout_s = source_timeout_s
 
     async def _jsonl(self, url: str) -> list[dict]:
         text = (await self.client.get(url)).text
@@ -225,17 +228,28 @@ class ProductSyncPipeline:
         attempts: list[dict] = []
         rows: list[dict] = []
         used = None
+        best_rows, best_source, best_id = [], None, -1
+        known_max = self.store.max_draw_id(product) or 0
         for s in self.chain(product) if source == "auto" else [source]:
             try:
-                rows = await self.fetch(product, s, max_pages, full)
-            except (SourceError, OSError, ValueError) as exc:
-                msg = str(exc).splitlines()[0][:300]
+                rows = await asyncio.wait_for(self.fetch(product, s, max_pages, full), self.source_timeout_s)
+            except (SourceError, OSError, ValueError, TimeoutError) as exc:
+                msg = (str(exc).splitlines() or [type(exc).__name__])[0][:300]
                 attempts.append({"source": s, "ok": False, "rows": 0, "error": msg})
                 log.warning("%s: source %s failed (%s)", product.value, s, msg)
                 continue
             attempts.append({"source": s, "ok": True, "rows": len(rows), "error": None})
+            parsed, _ = parse_product_rows(product, rows, s)
+            source_max = int(parsed.draw_ids.max()) if len(parsed) else -1
+            if source_max > best_id:
+                best_rows, best_source, best_id = rows, s, source_max
+            if source == 'auto' and source_max <= known_max:
+                attempts[-1]['stale'] = True
+                continue
             used = s
             break
+        if used is None and best_source is not None:
+            rows, used = best_rows, best_source
         error = None if used else "; ".join(f"{a['source']}: {a['error']}" for a in attempts)
         inserted, rejected = self.store.upsert(product, rows, used or source) if rows else (0, 0)
         excl = self.store.add_exclusions(self._pending_exclusions)
@@ -331,14 +345,16 @@ async def sync_canonical_prizes(
     used = None
     for s in order if source == "auto" else [source]:
         try:
-            rows = await _prize_records(
+            rows = await asyncio.wait_for(_prize_records(
                 client, repository, spec, s, canonical_base_url=canonical_base_url, vietlott_base_url=vietlott_base_url, last=last,
                 bootstrap_cookie=bootstrap_cookie, nhanaz_base_url=nhanaz_base_url, nhanaz_dir=nhanaz_dir, v130_dir=v130_dir,
-            )
-        except (SourceError, OSError, ValueError) as exc:
-            attempts.append({"source": s, "ok": False, "rows": 0, "error": str(exc).splitlines()[0][:300]})
+            ), 20)
+        except (SourceError, OSError, ValueError, TimeoutError) as exc:
+            attempts.append({"source": s, "ok": False, "rows": 0, "error": (str(exc).splitlines() or [type(exc).__name__])[0][:300]})
             continue
         attempts.append({"source": s, "ok": True, "rows": len(rows), "error": None})
+        if source == 'auto' and not rows:
+            continue
         used = s
         break
     imp = import_canonical(rows, spec.code)

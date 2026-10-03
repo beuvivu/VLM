@@ -8,40 +8,35 @@ services:
       - "8000:8000"
     environment:
       VQE_SOURCE: auto                   # vietlott (Vietnamese IP only) → nhanaz → github_mirror (README §1.7)
-      VQE_SYNC_ON_STARTUP: "true"        # incremental sync after seeding from the bundled snapshot
+      VQE_AUTO_UPDATE_ENABLED: "true"   # per-product windows, restart recovery, bounded retries
+      VQE_HTTP_BACKEND: curl_cffi
+      TZ: Asia/Ho_Chi_Minh
       VQE_LOG_LEVEL: INFO
     volumes:
       - vqe-data:/app/data               # DuckDB file + Parquet exports
     restart: unless-stopped
 
-  # Periodic incremental sync through the API (the API process owns the DuckDB file,
-  # so writers go through it instead of opening the database concurrently).
+  # Compatibility service for model/finance refresh only. Draw results are
+  # updated by the API's independent per-product scheduler above.
   scheduler:
     image: curlimages/curl:8.10.1
     depends_on:
       api:
         condition: service_healthy
     environment:
-      SYNC_EVERY_SECONDS: "21600"        # 6 h; Mega/Power/Max 3D ~18:00 ICT, Lotto 13:00 and 21:00, Keno/Bingo18 all day
-      PRIZE_SOURCE: auto                 # auto = vietlott → canonical → nhanaz (→ v130); or one of them
-      PRODUCT_SOURCE: auto               # auto = vietlott → nhanaz → mirror/canonical (→ v130)
+      REFRESH_EVERY_SECONDS: "21600"
     entrypoint:
       - /bin/sh
       - -c
       - |
         while true; do
           for g in mega645 power655 lotto535; do
-            curl -fsS -X POST "http://api:8000/games/$$g/sync" -H 'Content-Type: application/json' -d '{}' || echo "sync $$g failed"
-            curl -fsS -X POST "http://api:8000/games/$$g/prizes/sync" -H 'Content-Type: application/json' -d "{\"source\": \"$$PRIZE_SOURCE\"}" || echo "prize sync $$g failed"
+            curl -fsS --max-time 180 -X POST "http://api:8000/games/$$g/prizes/sync" -H 'Content-Type: application/json' -d '{"source":"auto"}' || echo "prize refresh $$g failed"
           done
-          for p in keno bingo18 max3d max3dpro; do  # max4d is an archive (no new draws)
-            curl -fsS -X POST "http://api:8000/products/$$p/sync" -H 'Content-Type: application/json' -d "{\"source\": \"$$PRODUCT_SOURCE\"}" || echo "product sync $$p failed"
-          done
-          # self-learning forecaster (v3.5): learn the new draws, score past forecasts, record the next one
           for p in mega645 power655 lotto535 keno bingo18 max3d max3dpro; do
-            curl -fsS "http://api:8000/forecast/$$p?record=true" > /dev/null || echo "forecast $$p failed"
+            curl -fsS --max-time 600 "http://api:8000/forecast/$$p?record=true" > /dev/null || echo "forecast $$p failed"
           done
-          sleep "$$SYNC_EVERY_SECONDS"
+          sleep "$$REFRESH_EVERY_SECONDS"
         done
     restart: unless-stopped
 

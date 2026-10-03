@@ -21,6 +21,9 @@ venv/
 data/*.duckdb*
 data/parquet/
 data/products/
+data/updates/
+data/results/status.json
+data/results/writer.lock
 data/forecast/*
 !data/forecast/ledger.jsonl
 data/local/

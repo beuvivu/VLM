@@ -84,16 +84,37 @@ def create_app(settings: Settings | None = None, repository: DrawRepository | No
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         state = AppState(settings=settings, repository=repository or build_repository(settings))
         app.state.vqe = state
-        await _seed(state)
-        task = asyncio.create_task(_background_sync(state)) if settings.sync_on_startup else None
-        yield
-        if task is not None and not task.done():
-            task.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await task
-        close = getattr(state.repository, "close", None)
-        if callable(close):
-            await asyncio.to_thread(close)
+        lease, task = None, None
+        try:
+            if settings.auto_update_enabled:
+                from vlm.updates.lease import WriterLease
+                from vlm.updates.service import journal_path, make_runner, replay_results
+                lease = WriterLease(journal_path(state).parent / 'writer.lock')
+                lease.__enter__()
+            await _seed(state)
+            if settings.auto_update_enabled:
+                replay_results(state)
+                state.updater = make_runner(state)
+                task = asyncio.create_task(state.updater.run_forever(), name='vlm-periodic-results')
+            else:
+                task = asyncio.create_task(_background_sync(state)) if settings.sync_on_startup else None
+            yield
+        finally:
+            try:
+                try:
+                    if task is not None:
+                        if not task.done():
+                            task.cancel()
+                        with contextlib.suppress(asyncio.CancelledError):
+                            await task
+                finally:
+                    state.updater = None
+                    close = getattr(state.repository, "close", None)
+                    if callable(close):
+                        await asyncio.to_thread(close)
+            finally:
+                if lease is not None:
+                    lease.__exit__()
 
     app = FastAPI(
         title=settings.api_title,

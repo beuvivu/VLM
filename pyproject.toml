@@ -41,6 +41,7 @@ postgres = ["psycopg[binary]>=3.2,<4"]
 [project.scripts]
 vietlott = "vietlott_engine.cli:main"
 vlm-audit = "vlm.tools.gap_analyzer:main"
+vlm-update = "vlm.updates.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/beuvivu/vietlott-quant-engine"

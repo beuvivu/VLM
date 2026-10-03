@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+import asyncio
 from dataclasses import dataclass, field
 
 from fastapi import HTTPException, Request
@@ -22,6 +23,14 @@ class AppState:
     _cache: dict[str, DrawHistory] = field(default_factory=dict)
     _models: dict[str, object] = field(default_factory=dict)
     _lock: threading.Lock = field(default_factory=threading.Lock)
+    _sync_locks: dict[str, asyncio.Lock] = field(default_factory=dict)
+    updater: object | None = None
+    _journal_seen: dict[tuple[str, int], tuple] | None = None
+    replay_conflicts: list[dict] = field(default_factory=list)
+
+    def sync_lock(self, product: str) -> asyncio.Lock:
+        """One in-flight sync per product, shared by HTTP and periodic updates."""
+        return self._sync_locks.setdefault(product, asyncio.Lock())
 
     def history(self, spec: GameSpec) -> DrawHistory:
         key = spec.code.value

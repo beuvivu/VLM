@@ -7,7 +7,7 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
- && /opt/venv/bin/pip install .
+ && /opt/venv/bin/pip install ".[crawler]"
 
 # -------------------------------------------------------------- runtime stage
 FROM python:3.12-slim AS runtime

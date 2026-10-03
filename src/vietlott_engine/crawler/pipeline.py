@@ -167,7 +167,7 @@ def build_source(settings: Settings, client: AsyncHttpClient | None, kind: str |
             if k == "v130" and settings.v130_dir is None:
                 continue
             chain.append(build_source(settings, client, k))
-        return FallbackDrawSource(chain)
+        return FallbackDrawSource(chain, settings.source_timeout_s)
     if kind == "github_mirror":
         return GithubMirrorSource(client, settings.github_mirror_base_url)
     if kind == "vietlott":

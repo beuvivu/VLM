@@ -43,4 +43,18 @@ jobs:
       - name: Ruff (lỗi đúng/sai)
         run: ruff check --select F,B023 src scripts tests
       - name: Pytest
-        run: python -m pytest -q
+        run: python -m pytest -q -rf --junitxml=pytest-report.xml
+      - name: Đưa lỗi test thành chú thích (đọc được ngay trên trang PR / lượt chạy)
+        if: failure()
+        shell: python
+        run: |
+          import pathlib
+          import xml.etree.ElementTree as ET
+
+          report = pathlib.Path("pytest-report.xml")
+          if report.exists():
+              for case in ET.parse(report).iter("testcase"):
+                  for bad in [*case.iter("failure"), *case.iter("error")]:
+                      text = ((bad.get("message") or "") + "\n" + (bad.text or "")[-2000:]).strip()
+                      text = text.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+                      print(f"::error title={case.get('classname')}::{case.get('name')}%0A{text}")

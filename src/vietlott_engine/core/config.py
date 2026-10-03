@@ -67,6 +67,12 @@ class Settings(BaseSettings):
     auto_update_timeout_s: float = Field(default=180, gt=0)
     auto_update_dir: Path | None = None
     source_timeout_s: float = Field(default=20, gt=0)
+    ml_auto_update_enabled: bool = True
+    ml_bootstrap: int = Field(default=1000, ge=1, le=1000)
+    ml_learning_timeout_s: float = Field(default=180, gt=0)
+    ml_tree_every: int = Field(default=64, ge=1, le=1000)
+    ml_search_nodes: int = Field(default=1000, ge=1, le=20000)
+    ml_backends: list[Literal['rf', 'xgb', 'lgb']] = ['rf']
     storage_backend: Literal["duckdb", "memory"] = "duckdb"
     seed_file_dir: Path | None = None  # optional offline JSONL dir loaded on startup when the store is empty
     log_level: str = "INFO"

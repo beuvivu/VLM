@@ -1,0 +1,3158 @@
+{
+  "config": {
+    "bootstrap": 128,
+    "warmup": 32,
+    "tree_every": 64,
+    "tree_buffer": 64,
+    "search_nodes": 50,
+    "backends": [
+      "rf",
+      "xgb",
+      "lgb"
+    ],
+    "seed": 20261003
+  },
+  "products": [
+    {
+      "product": "mega645",
+      "display_name": "Mega 6/45",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:03.195642+00:00",
+      "last_id": 1570,
+      "last_date": "2026-10-02",
+      "target_id": 1571,
+      "draws_learned": 128,
+      "first_learned_id": 1443,
+      "historical_draws_available": 1570,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "2dca55a78731d1a6fbcb456ce1d77cb7ae73034a2f6fabb58700bc676ae6bdaa",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "main",
+          "kind": "set",
+          "scope": "main_draw_set",
+          "top": [
+            {
+              "numbers": [
+                16,
+                19,
+                32,
+                34,
+                36,
+                45
+              ],
+              "p_model": 1.4241905820589775e-07,
+              "p_fair": 1.2277380399898834e-07,
+              "p_deployed": 1.2277380399898834e-07,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.14435897435897435,
+                "ema10": 0.10476907169369042,
+                "ema100": 0.1384537301664394,
+                "log_gap": 0.48441573055411585,
+                "gap_censored": 0.0,
+                "pair_link": 0.01714409722222222,
+                "triple_link": 0.0013744213404910017
+              }
+            },
+            {
+              "numbers": [
+                19,
+                32,
+                34,
+                36,
+                40,
+                45
+              ],
+              "p_model": 1.4186644502221244e-07,
+              "p_fair": 1.2277380399898834e-07,
+              "p_deployed": 1.2277380399898834e-07,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.12512820512820513,
+                "ema10": 0.0914828925833392,
+                "ema100": 0.12715848692130122,
+                "log_gap": 0.5050503708343234,
+                "gap_censored": 0.0,
+                "pair_link": 0.014105902777777778,
+                "triple_link": 0.0010127315132801111
+              }
+            },
+            {
+              "numbers": [
+                19,
+                21,
+                32,
+                34,
+                36,
+                40
+              ],
+              "p_model": 1.4111775574328355e-07,
+              "p_fair": 1.2277380399898834e-07,
+              "p_deployed": 1.2277380399898834e-07,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11743589743589744,
+                "ema10": 0.09149214817745425,
+                "ema100": 0.12254898117778373,
+                "log_gap": 0.49701163560709366,
+                "gap_censored": 0.0,
+                "pair_link": 0.014105902777777778,
+                "triple_link": 0.0011574074499852334
+              }
+            },
+            {
+              "numbers": [
+                17,
+                19,
+                32,
+                34,
+                36,
+                40
+              ],
+              "p_model": 1.4057486582118848e-07,
+              "p_fair": 1.2277380399898834e-07,
+              "p_deployed": 1.2277380399898834e-07,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.12,
+                "ema10": 0.08904579427905047,
+                "ema100": 0.12450774487691862,
+                "log_gap": 0.4999120148400813,
+                "gap_censored": 0.0,
+                "pair_link": 0.012803819444444446,
+                "triple_link": 0.0010127315132801111
+              }
+            },
+            {
+              "numbers": [
+                19,
+                29,
+                32,
+                34,
+                36,
+                40
+              ],
+              "p_model": 1.4013230811842495e-07,
+              "p_fair": 1.2277380399898834e-07,
+              "p_deployed": 1.2277380399898834e-07,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11615384615384616,
+                "ema10": 0.08708584874207441,
+                "ema100": 0.1220812880469705,
+                "log_gap": 0.5050503708343232,
+                "gap_censored": 0.0,
+                "pair_link": 0.013020833333333334,
+                "triple_link": 0.0009403935449275499
+              }
+            }
+          ],
+          "ranking_exact": false,
+          "marginals_model": [
+            0.13302814420370726,
+            0.13244501599852174,
+            0.1322128788130591,
+            0.1330663066300441,
+            0.1335142249905658,
+            0.13212254997112075,
+            0.1328549618386875,
+            0.13285520430025174,
+            0.13330976044201887,
+            0.13303345459044164,
+            0.13212606784861627,
+            0.13154927569303923,
+            0.13283795309663798,
+            0.1327884979088971,
+            0.1323619572357793,
+            0.1343874345523465,
+            0.13413677412533356,
+            0.13359487161950495,
+            0.13562920408558737,
+            0.13243163204404504,
+            0.13454951222812261,
+            0.1334975609660617,
+            0.13175543020109706,
+            0.13341989881440008,
+            0.13252523176585393,
+            0.13302807819780008,
+            0.13305330674891722,
+            0.1319402214243034,
+            0.13402419036570015,
+            0.1334622679590048,
+            0.1327423485283901,
+            0.13589869104174604,
+            0.1339593577021357,
+            0.13543339210915314,
+            0.13385852191855913,
+            0.13563931727370407,
+            0.13268811594915453,
+            0.13360022657243045,
+            0.133640383518107,
+            0.13468582369620313,
+            0.131955353067938,
+            0.13334781231912132,
+            0.1329377640476297,
+            0.13341206464474262,
+            0.13465895895151825
+          ],
+          "marginals_deployed": [
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333,
+            0.13333333333333333
+          ],
+          "expert_weights": {
+            "uniform": 0.7381720746352434,
+            "logistic_l2_.001": 0.03031906485345111,
+            "logistic_l2_.01": 0.0323579325793712,
+            "gru": 0.11212560986786856,
+            "rf": 0.00824947580676204,
+            "xgb": 0.03809767733611446,
+            "lgb": 0.04067816492118913
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.002911549295240771,
+            "log10_likelihood_ratio_exploratory": -0.12138910010038738,
+            "brier_observed_rates": 0.11556895374935254,
+            "brier_fair": 0.11555555555555573,
+            "expert_mean_nll": {
+              "uniform": 15.912922166473662,
+              "logistic_l2_.001": 15.916228691270517,
+              "logistic_l2_.01": 15.916494489057287,
+              "gru": 15.913556423252766,
+              "rf": 15.946615902003588,
+              "xgb": 15.926441527775593,
+              "lgb": 15.925899030780466
+            },
+            "reliability": [
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 4320,
+                "predicted": 0.13333333333333364,
+                "observed": 0.13333333333333333
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.5111111111111111,
+            "position": 0.0,
+            "freq_all": 0.13333333333333336,
+            "ma10": 0.1333333333333333,
+            "ma50": 0.13333333333333336,
+            "ema10": 0.1333333333333333,
+            "ema100": 0.1333333333333333,
+            "log_gap": 0.3823063179038559,
+            "gap_censored": 0.0,
+            "lag1": 0.13333333333333333,
+            "lag2": 0.13333333333333333,
+            "cycle10": 0.13333333333333333,
+            "pair_link": 0.01996527777777777,
+            "triple_link": 0.0017361111499162184,
+            "cluster_rate": 0.1925925925925926,
+            "last_sum": 0.46666666666666634,
+            "last_even": 0.33333333333333354,
+            "last_head": 0.45833333333333326,
+            "last_tail": 0.296296296296296,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Weighted sampling without replacement; main-set probabilities marginalize Power bonus."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Đa dạng coverage trong ngân sách; ít giao số không làm tăng xác suất một vé hoặc bảo đảm sinh lời."
+      },
+      "elapsed_seconds": 1.9915073709998978,
+      "learned_this_run": 128
+    },
+    {
+      "product": "power655",
+      "display_name": "Power 6/55",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:04.790303+00:00",
+      "last_id": 1406,
+      "last_date": "2026-10-03",
+      "target_id": 1407,
+      "draws_learned": 128,
+      "first_learned_id": 1279,
+      "historical_draws_available": 1406,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "8b9c5c7c21161e368a1db376c37e21ce3cd5ab24bdcb481f01ea6ee25023c22c",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "main",
+          "kind": "set",
+          "scope": "main_draw_set",
+          "top": [
+            {
+              "numbers": [
+                4,
+                5,
+                10,
+                13,
+                34,
+                52
+              ],
+              "p_model": 3.63961814752065e-08,
+              "p_fair": 3.449504004442961e-08,
+              "p_deployed": 3.449504004442961e-08,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11065268065268065,
+                "ema10": 0.14955377930097147,
+                "ema100": 0.11036727865906153,
+                "log_gap": 0.26402698930962,
+                "gap_censored": 0.0,
+                "pair_link": 0.018446180555555556,
+                "triple_link": 0.0018807870850044612
+              }
+            },
+            {
+              "numbers": [
+                4,
+                5,
+                13,
+                15,
+                34,
+                52
+              ],
+              "p_model": 3.6347509595809144e-08,
+              "p_fair": 3.449504004442961e-08,
+              "p_deployed": 3.449504004442961e-08,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11065268065268065,
+                "ema10": 0.15193754436721338,
+                "ema100": 0.11090684842579272,
+                "log_gap": 0.26402698930962,
+                "gap_censored": 0.0,
+                "pair_link": 0.018880208333333332,
+                "triple_link": 0.0019531250485063842
+              }
+            },
+            {
+              "numbers": [
+                3,
+                4,
+                5,
+                13,
+                34,
+                52
+              ],
+              "p_model": 3.633938699298927e-08,
+              "p_fair": 3.449504004442961e-08,
+              "p_deployed": 3.449504004442961e-08,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11193473193473193,
+                "ema10": 0.1604674992613148,
+                "ema100": 0.11223491554230884,
+                "log_gap": 0.23445021614292325,
+                "gap_censored": 0.0,
+                "pair_link": 0.018663194444444444,
+                "triple_link": 0.0018807870850044612
+              }
+            },
+            {
+              "numbers": [
+                4,
+                5,
+                10,
+                13,
+                15,
+                52
+              ],
+              "p_model": 3.633705062801783e-08,
+              "p_fair": 3.449504004442961e-08,
+              "p_deployed": 3.449504004442961e-08,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.1068065268065268,
+                "ema10": 0.14200965425206072,
+                "ema100": 0.10846353098093879,
+                "log_gap": 0.3218470244892236,
+                "gap_censored": 0.0,
+                "pair_link": 0.018229166666666668,
+                "triple_link": 0.0018807870850044612
+              }
+            },
+            {
+              "numbers": [
+                4,
+                5,
+                13,
+                34,
+                52,
+                55
+              ],
+              "p_model": 3.6329151033871536e-08,
+              "p_fair": 3.449504004442961e-08,
+              "p_deployed": 3.449504004442961e-08,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.11962703962703962,
+                "ema10": 0.16511237304823342,
+                "ema100": 0.11568985675290966,
+                "log_gap": 0.20620695413001644,
+                "gap_censored": 0.0,
+                "pair_link": 0.019748263888888888,
+                "triple_link": 0.00209780097551023
+              }
+            }
+          ],
+          "ranking_exact": false,
+          "marginals_model": [
+            0.10923602076498481,
+            0.10940920264525007,
+            0.10947197663793262,
+            0.11000165912468861,
+            0.1103553539374373,
+            0.10925970854733863,
+            0.10865174263261347,
+            0.10936917436804881,
+            0.10919694732227951,
+            0.10956822744462852,
+            0.10887846572916914,
+            0.1094583999758912,
+            0.10971967805918227,
+            0.10929088860080081,
+            0.10947998985365856,
+            0.1090574643484195,
+            0.1089843300877641,
+            0.10899666048871362,
+            0.10928488691663422,
+            0.10928312387749527,
+            0.10919845039718011,
+            0.10920058274493517,
+            0.10917636456427132,
+            0.1083039009793953,
+            0.10897218354826312,
+            0.10915792072257106,
+            0.10911940279841846,
+            0.10893390462813612,
+            0.10930238012550761,
+            0.1094315709478642,
+            0.10884016274319164,
+            0.10890272791707398,
+            0.10918752950711696,
+            0.10957921499792202,
+            0.10873457411439234,
+            0.10866340374908996,
+            0.1089911547026543,
+            0.10884068038184198,
+            0.10918695384967497,
+            0.10895217793194834,
+            0.10895919672858453,
+            0.10913033966047243,
+            0.10834207424150048,
+            0.10912230649025266,
+            0.10870186979125519,
+            0.10883530430833098,
+            0.1082120829230173,
+            0.10860397014002507,
+            0.10877304856224744,
+            0.10893230287034164,
+            0.10873806983709285,
+            0.10957073527386878,
+            0.1089632699856582,
+            0.1080712569602886,
+            0.10941502951268452
+          ],
+          "marginals_deployed": [
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909,
+            0.10909090909090909
+          ],
+          "expert_weights": {
+            "uniform": 0.7945855562356064,
+            "logistic_l2_.001": 0.029884973179904607,
+            "logistic_l2_.01": 0.04207934768079486,
+            "gru": 0.13044804430537624,
+            "rf": 0.0009045064423702747,
+            "xgb": 0.0009044845038690077,
+            "lgb": 0.001193087652078435
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.0037259247838454432,
+            "log10_likelihood_ratio_exploratory": -0.15534226306662163,
+            "brier_observed_rates": 0.09720542625541345,
+            "brier_fair": 0.0971900826446282,
+            "expert_mean_nll": {
+              "uniform": 21.074270588183264,
+              "logistic_l2_.001": 21.08059328941782,
+              "logistic_l2_.01": 21.07590349217328,
+              "gru": 21.07409116204062,
+              "rf": 21.233070896258273,
+              "xgb": 21.17891538746961,
+              "lgb": 21.161344075773357
+            },
+            "reliability": [
+              {
+                "count": 2,
+                "predicted": 0.09973043928708902,
+                "observed": 0.0
+              },
+              {
+                "count": 5278,
+                "predicted": 0.10909445606696211,
+                "observed": 0.10913224706328155
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.5090909090909089,
+            "position": 0.0,
+            "freq_all": 0.10909090909090918,
+            "ma10": 0.10909090909090906,
+            "ma50": 0.10909090909090906,
+            "ema10": 0.10909090909090911,
+            "ema100": 0.10909090909090909,
+            "log_gap": 0.39879366772064717,
+            "gap_censored": 0.0,
+            "lag1": 0.10909090909090909,
+            "lag2": 0.10909090909090909,
+            "cycle10": 0.10909090909090909,
+            "pair_link": 0.014630681818181819,
+            "triple_link": 0.0012626262805001303,
+            "cluster_rate": 0.24242424242424246,
+            "last_sum": 0.3606060606060606,
+            "last_even": 0.5,
+            "last_head": 0.3000000000000003,
+            "last_tail": 0.5370370370370374,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Weighted sampling without replacement; main-set probabilities marginalize Power bonus."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Đa dạng coverage trong ngân sách; ít giao số không làm tăng xác suất một vé hoặc bảo đảm sinh lời."
+      },
+      "elapsed_seconds": 1.5916070210005273,
+      "learned_this_run": 128
+    },
+    {
+      "product": "lotto535",
+      "display_name": "Lotto 5/35",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:07.783034+00:00",
+      "last_id": 923,
+      "last_date": "2026-10-03",
+      "target_id": 924,
+      "draws_learned": 128,
+      "first_learned_id": 796,
+      "historical_draws_available": 923,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "1f72cdb82b757e64a53c3f278793c4cc207ecf25440f2a1840c440761348d64f",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "main",
+          "kind": "set",
+          "scope": "main_draw_set",
+          "top": [
+            {
+              "numbers": [
+                8,
+                11,
+                12,
+                32,
+                34
+              ],
+              "p_model": 3.525226074507698e-06,
+              "p_fair": 3.0804110500505186e-06,
+              "p_deployed": 3.0804110500505186e-06,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.14835164835164835,
+                "ema10": 0.22344188104140822,
+                "ema100": 0.15004074736944373,
+                "log_gap": 0.29818879797456,
+                "gap_censored": 0.0,
+                "pair_link": 0.018125,
+                "triple_link": 0.001124999998137355
+              }
+            },
+            {
+              "numbers": [
+                8,
+                12,
+                30,
+                32,
+                34
+              ],
+              "p_model": 3.438232421108034e-06,
+              "p_fair": 3.0804110500505186e-06,
+              "p_deployed": 3.0804110500505186e-06,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.15142857142857144,
+                "ema10": 0.21677897566881038,
+                "ema100": 0.15225863171182824,
+                "log_gap": 0.3096960808726313,
+                "gap_censored": 0.0,
+                "pair_link": 0.018125,
+                "triple_link": 0.0013749999925494194
+              }
+            },
+            {
+              "numbers": [
+                8,
+                11,
+                30,
+                32,
+                34
+              ],
+              "p_model": 3.4381022652992354e-06,
+              "p_fair": 3.0804110500505186e-06,
+              "p_deployed": 3.0804110500505186e-06,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.1621978021978022,
+                "ema10": 0.2546924697745501,
+                "ema100": 0.1605804984575201,
+                "log_gap": 0.2704629107521622,
+                "gap_censored": 0.0,
+                "pair_link": 0.020625,
+                "triple_link": 0.0014999999897554518
+              }
+            },
+            {
+              "numbers": [
+                11,
+                12,
+                30,
+                32,
+                34
+              ],
+              "p_model": 3.4291345756483394e-06,
+              "p_fair": 3.0804110500505186e-06,
+              "p_deployed": 3.0804110500505186e-06,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.1575824175824176,
+                "ema10": 0.23813800649944977,
+                "ema100": 0.15667922179880162,
+                "log_gap": 0.28197019365023346,
+                "gap_censored": 0.0,
+                "pair_link": 0.0171875,
+                "triple_link": 0.0008749999804422259
+              }
+            },
+            {
+              "numbers": [
+                8,
+                11,
+                21,
+                32,
+                34
+              ],
+              "p_model": 3.4278439615640174e-06,
+              "p_fair": 3.0804110500505186e-06,
+              "p_deployed": 3.0804110500505186e-06,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.15296703296703298,
+                "ema10": 0.2203824177495263,
+                "ema100": 0.1514762137061832,
+                "log_gap": 0.2928475422695791,
+                "gap_censored": 0.0,
+                "pair_link": 0.021562500000000002,
+                "triple_link": 0.0014999999897554518
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.14083451344703898,
+            0.14297686614718647,
+            0.14252715911915484,
+            0.14229973879592916,
+            0.14232947423314307,
+            0.14288045551406797,
+            0.1424915283888873,
+            0.14554174045138044,
+            0.142924542413258,
+            0.14006302863865155,
+            0.14531536846109055,
+            0.14541921881628167,
+            0.14092985797599628,
+            0.14297728884176442,
+            0.14033188000964192,
+            0.14274979394426282,
+            0.14072004933316762,
+            0.14283123589125027,
+            0.14267946771211137,
+            0.14270821507719528,
+            0.14303515517866366,
+            0.14274871859719387,
+            0.1426376217492916,
+            0.14266458805616786,
+            0.14299660187000654,
+            0.1426915311852192,
+            0.14273898076544464,
+            0.14304117969435198,
+            0.14267639615403382,
+            0.14330514557272683,
+            0.14287336605506445,
+            0.14560686743069054,
+            0.14276091410929437,
+            0.14578914359981557,
+            0.14290236677057436
+          ],
+          "marginals_deployed": [
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285
+          ],
+          "expert_weights": {
+            "uniform": 0.7467874520610365,
+            "logistic_l2_.001": 0.04553533741065059,
+            "logistic_l2_.01": 0.07947146732843154,
+            "gru": 0.12241692628759446,
+            "rf": 0.000854172413909604,
+            "xgb": 0.0032130207269281366,
+            "lgb": 0.0017216237714487814
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.0034898985595889034,
+            "log10_likelihood_ratio_exploratory": -0.1455017939358305,
+            "brier_observed_rates": 0.12247589502265517,
+            "brier_fair": 0.12244897959183683,
+            "expert_mean_nll": {
+              "uniform": 12.690447512074888,
+              "logistic_l2_.001": 12.694081423993872,
+              "logistic_l2_.01": 12.688976868565065,
+              "gru": 12.690887096323998,
+              "rf": 12.798870591277206,
+              "xgb": 12.732858448021675,
+              "lgb": 12.747005131452278
+            },
+            "reliability": [
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 3360,
+                "predicted": 0.14285714285714313,
+                "observed": 0.14285714285714285
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.5142857142857143,
+            "position": 0.0,
+            "freq_all": 0.14285714285714288,
+            "ma10": 0.14285714285714288,
+            "ma50": 0.14285714285714288,
+            "ema10": 0.14285714285714285,
+            "ema100": 0.1428571428571429,
+            "log_gap": 0.37364350887455533,
+            "gap_censored": 0.0,
+            "lag1": 0.14285714285714285,
+            "lag2": 0.14285714285714285,
+            "cycle10": 0.14285714285714285,
+            "pair_link": 0.02276785714285714,
+            "triple_link": 0.0017678571166470647,
+            "cluster_rate": 0.238095238095238,
+            "last_sum": 0.3200000000000001,
+            "last_even": 0.2000000000000001,
+            "last_head": 0.2666666666666667,
+            "last_tail": 0.3555555555555556,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Weighted sampling without replacement; main-set probabilities marginalize Power bonus."
+        },
+        {
+          "name": "special",
+          "kind": "digit",
+          "scope": "one_position_tuple",
+          "top": [
+            {
+              "numbers": [
+                1
+              ],
+              "p_model": 0.0942305121180269,
+              "p_fair": 0.08333333333333333,
+              "p_deployed": 0.08333333333333333,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.07051282051282051,
+                "ema10": 0.03639017682003991,
+                "ema100": 0.07491816100534957,
+                "log_gap": 0.5666426688112433,
+                "gap_censored": 0.0,
+                "pair_link": 0.0,
+                "triple_link": 0.0
+              }
+            },
+            {
+              "numbers": [
+                6
+              ],
+              "p_model": 0.09299087336906477,
+              "p_fair": 0.08333333333333333,
+              "p_deployed": 0.08333333333333333,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.055128205128205134,
+                "ema10": 0.03650639005177223,
+                "ema100": 0.06725737523883608,
+                "log_gap": 0.5991464547107982,
+                "gap_censored": 0.0,
+                "pair_link": 0.0,
+                "triple_link": 0.0
+              }
+            },
+            {
+              "numbers": [
+                3
+              ],
+              "p_model": 0.08427604029010934,
+              "p_fair": 0.08333333333333333,
+              "p_deployed": 0.08333333333333333,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09358974358974359,
+                "ema10": 0.13539017236214265,
+                "ema100": 0.09106987710866023,
+                "log_gap": 0.358351893845611,
+                "gap_censored": 0.0,
+                "pair_link": 0.0,
+                "triple_link": 0.0
+              }
+            },
+            {
+              "numbers": [
+                4
+              ],
+              "p_model": 0.08347248977467499,
+              "p_fair": 0.08333333333333333,
+              "p_deployed": 0.08333333333333333,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.06282051282051282,
+                "ema10": 0.05668933517156394,
+                "ema100": 0.07283533576945728,
+                "log_gap": 0.5888877958332881,
+                "gap_censored": 0.0,
+                "pair_link": 0.0,
+                "triple_link": 0.0
+              }
+            },
+            {
+              "numbers": [
+                5
+              ],
+              "p_model": 0.08331253757032206,
+              "p_fair": 0.08333333333333333,
+              "p_deployed": 0.08333333333333333,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.0858974358974359,
+                "ema10": 0.1645753937436652,
+                "ema100": 0.08902325409224705,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.0859375,
+                "triple_link": 0.0
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.09423051211802688,
+            0.07939618400318892,
+            0.08427604029010935,
+            0.08347248977467497,
+            0.08331253757032206,
+            0.09299087336906472,
+            0.08317281462368117,
+            0.08275735599151787,
+            0.07806878098823458,
+            0.0779184914560391,
+            0.08237975366016534,
+            0.07802416615497483
+          ],
+          "marginals_deployed": [
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333,
+            0.08333333333333333
+          ],
+          "expert_weights": {
+            "uniform": 0.5889663712816928,
+            "logistic_l2_.001": 0.021675214099727395,
+            "logistic_l2_.01": 0.04896900718687835,
+            "gru": 0.09290057642252254,
+            "rf": 0.00574488840149154,
+            "xgb": 0.14962748989338368,
+            "lgb": 0.09211645271430352
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.0021170079666326808,
+            "log10_likelihood_ratio_exploratory": -0.08826286829316447,
+            "brier_observed_rates": 0.07641870502136747,
+            "brier_fair": 0.07638888888888905,
+            "expert_mean_nll": {
+              "uniform": 2.4849066497880012,
+              "logistic_l2_.001": 2.503672647828184,
+              "logistic_l2_.01": 2.495027317622545,
+              "gru": 2.4857130776736756,
+              "rf": 2.518991861547582,
+              "xgb": 2.4804176193729144,
+              "lgb": 2.4856777763915323
+            },
+            "reliability": [
+              {
+                "count": 1151,
+                "predicted": 0.08331863075852242,
+                "observed": 0.08340573414422242
+              },
+              {
+                "count": 1,
+                "predicted": 0.10025599694075299,
+                "observed": 0.0
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.5416666666666666,
+            "position": 0.0,
+            "freq_all": 0.08333333333333333,
+            "ma10": 0.08333333333333333,
+            "ma50": 0.08333333333333336,
+            "ema10": 0.08333333333333333,
+            "ema100": 0.08333333333333333,
+            "log_gap": 0.4238065763710555,
+            "gap_censored": 0.0,
+            "lag1": 0.08333333333333333,
+            "lag2": 0.08333333333333333,
+            "cycle10": 0.08333333333333333,
+            "pair_link": 0.007161458333333333,
+            "triple_link": 0.0,
+            "cluster_rate": 0.0,
+            "last_sum": 0.4166666666666667,
+            "last_even": 0.0,
+            "last_head": 0.0,
+            "last_tail": 0.5555555555555555,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Independent categorical positions; Max tier occurrences are pooled, not prize-value predictions."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Đa dạng coverage trong ngân sách; ít giao số không làm tăng xác suất một vé hoặc bảo đảm sinh lời."
+      },
+      "elapsed_seconds": 2.9901177339997957,
+      "learned_this_run": 128
+    },
+    {
+      "product": "keno",
+      "display_name": "Keno",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:15.237395+00:00",
+      "last_id": 297980,
+      "last_date": "2026-10-03",
+      "target_id": 297981,
+      "draws_learned": 128,
+      "first_learned_id": 297655,
+      "historical_draws_available": 297442,
+      "missing_ids_inside_range": 538,
+      "date_anomalies": 11,
+      "history_sha256": "0d423aa4ebe2d3ed84fcbac3edfe9971061ffaffb3de337a857af90296f6301a",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [
+        "history_date_anomalies"
+      ],
+      "components": [
+        {
+          "name": "main",
+          "kind": "set",
+          "scope": "main_draw_set",
+          "top": [
+            {
+              "numbers": [
+                1,
+                7,
+                8,
+                19,
+                32,
+                36,
+                38,
+                46,
+                48,
+                50,
+                51,
+                53,
+                58,
+                62,
+                65,
+                70,
+                72,
+                73,
+                78,
+                80
+              ],
+              "p_model": 3.0665919896708486e-18,
+              "p_fair": 2.828601346453458e-19,
+              "p_deployed": 2.828601346453458e-19,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.24961538461538463,
+                "ema10": 0.23649032946567786,
+                "ema100": 0.24962626668693316,
+                "log_gap": 0.2639989250784617,
+                "gap_censored": 0.0,
+                "pair_link": 0.06666015624999999,
+                "triple_link": 0.015433593606576323
+              }
+            },
+            {
+              "numbers": [
+                1,
+                8,
+                19,
+                25,
+                32,
+                36,
+                38,
+                46,
+                48,
+                50,
+                51,
+                53,
+                58,
+                62,
+                65,
+                70,
+                72,
+                73,
+                78,
+                80
+              ],
+              "p_model": 3.0560776652422902e-18,
+              "p_fair": 2.828601346453458e-19,
+              "p_deployed": 2.828601346453458e-19,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.25038461538461537,
+                "ema10": 0.23888324205859593,
+                "ema100": 0.2503526206109383,
+                "log_gap": 0.2639989250784617,
+                "gap_censored": 0.0,
+                "pair_link": 0.06679687499999999,
+                "triple_link": 0.015474609239026904
+              }
+            },
+            {
+              "numbers": [
+                1,
+                8,
+                19,
+                32,
+                36,
+                38,
+                46,
+                48,
+                50,
+                51,
+                52,
+                53,
+                58,
+                62,
+                65,
+                70,
+                72,
+                73,
+                78,
+                80
+              ],
+              "p_model": 3.0499185075844393e-18,
+              "p_fair": 2.828601346453458e-19,
+              "p_deployed": 2.828601346453458e-19,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.25153846153846154,
+                "ema10": 0.23886287770469647,
+                "ema100": 0.25083702871899544,
+                "log_gap": 0.2639989250784617,
+                "gap_censored": 0.0,
+                "pair_link": 0.06712890625,
+                "triple_link": 0.015564452996477485
+              }
+            },
+            {
+              "numbers": [
+                1,
+                8,
+                19,
+                32,
+                34,
+                36,
+                38,
+                46,
+                48,
+                50,
+                51,
+                53,
+                58,
+                62,
+                65,
+                70,
+                72,
+                73,
+                78,
+                80
+              ],
+              "p_model": 3.0390040052390796e-18,
+              "p_fair": 2.828601346453458e-19,
+              "p_deployed": 2.828601346453458e-19,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.25153846153846154,
+                "ema10": 0.24085270251524976,
+                "ema100": 0.25102448078619716,
+                "log_gap": 0.2639989250784617,
+                "gap_censored": 0.0,
+                "pair_link": 0.06718749999999998,
+                "triple_link": 0.01557421861216426
+              }
+            },
+            {
+              "numbers": [
+                1,
+                8,
+                17,
+                19,
+                32,
+                36,
+                38,
+                46,
+                48,
+                50,
+                51,
+                53,
+                58,
+                62,
+                65,
+                70,
+                72,
+                73,
+                78,
+                80
+              ],
+              "p_model": 3.030473499771095e-18,
+              "p_fair": 2.828601346453458e-19,
+              "p_deployed": 2.828601346453458e-19,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.24884615384615386,
+                "ema10": 0.2340959822354481,
+                "ema100": 0.24895160699126406,
+                "log_gap": 0.25706745327286223,
+                "gap_censored": 0.0,
+                "pair_link": 0.06689453124999999,
+                "triple_link": 0.015583984227851034
+              }
+            }
+          ],
+          "ranking_exact": false,
+          "marginals_model": [
+            0.2728747237915406,
+            0.22691924078386497,
+            0.23424318613358647,
+            0.24296652885328512,
+            0.24932733880181054,
+            0.2404300454325162,
+            0.2564325181488521,
+            0.2785421100860006,
+            0.2108028408857257,
+            0.25264235312237304,
+            0.23850553153842124,
+            0.23237567306452378,
+            0.2324107242762663,
+            0.24711721519358848,
+            0.24820489430521842,
+            0.23033751764681973,
+            0.25470894985831605,
+            0.2327807337467869,
+            0.25921887277777483,
+            0.23019962275718672,
+            0.24490879861045328,
+            0.24379775521276661,
+            0.23062574960632304,
+            0.23978257538868558,
+            0.2560722518082322,
+            0.2360072711335417,
+            0.2475305692655555,
+            0.2417766468796698,
+            0.2443767126640861,
+            0.2522024605723787,
+            0.250383014420147,
+            0.2644586345350427,
+            0.24900884333368184,
+            0.2555970968957191,
+            0.23845008974889986,
+            0.27686223230093926,
+            0.25058715963323974,
+            0.27276868135996285,
+            0.24856266516454634,
+            0.2445287826578047,
+            0.24245823075730782,
+            0.24431665070096195,
+            0.2512124639922819,
+            0.24632625139149467,
+            0.23925525461516736,
+            0.26293036263656355,
+            0.24405305485399276,
+            0.2579239144139324,
+            0.23070829355809538,
+            0.26204817548963405,
+            0.2667947993158017,
+            0.2558486767732077,
+            0.27182129924323206,
+            0.2471238660816087,
+            0.23175159002013188,
+            0.25166784460595604,
+            0.23044707430451083,
+            0.27833795439322784,
+            0.24504493907722139,
+            0.25107323677594634,
+            0.24753685048404236,
+            0.27339058537284533,
+            0.25038135430796016,
+            0.23801621617571092,
+            0.27430387123671796,
+            0.2470965749963266,
+            0.22908571387891719,
+            0.25426287849514084,
+            0.24286706518815404,
+            0.29860478460617756,
+            0.2249843156988505,
+            0.26520090127696344,
+            0.27552869954449355,
+            0.24877966778356567,
+            0.25324713177136593,
+            0.2519764962497767,
+            0.2501681504892346,
+            0.2567991308148608,
+            0.252451894999963,
+            0.29484517123251963
+          ],
+          "marginals_deployed": [
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "expert_weights": {
+            "uniform": 0.15025155013378858,
+            "logistic_l2_.001": 0.002251264550558743,
+            "logistic_l2_.01": 0.0026855944322994795,
+            "gru": 0.022079859722551186,
+            "rf": 0.043362378889639466,
+            "xgb": 0.08593475626174536,
+            "lgb": 0.693434596009414
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": 0.015254317644101937,
+            "log10_likelihood_ratio_exploratory": 0.6359871338911568,
+            "brier_observed_rates": 0.18743022695583808,
+            "brier_fair": 0.1875,
+            "expert_mean_nll": {
+              "uniform": 42.709334401268706,
+              "logistic_l2_.001": 42.73529068024794,
+              "logistic_l2_.01": 42.72752688740531,
+              "gru": 42.70996780287043,
+              "rf": 42.70227175398332,
+              "xgb": 42.69582886358159,
+              "lgb": 42.67351650396301
+            },
+            "reliability": [
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 7679,
+                "predicted": 0.24999288329207192,
+                "observed": 0.2500325563224378
+              },
+              {
+                "count": 1,
+                "predicted": 0.30464920017927627,
+                "observed": 0.0
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.50625,
+            "position": 0.0,
+            "freq_all": 0.24999999999999994,
+            "ma10": 0.24999999999999986,
+            "ma50": 0.24999999999999994,
+            "ema10": 0.24999999999999992,
+            "ema100": 0.25000000000000006,
+            "log_gap": 0.28747190868087474,
+            "gap_censored": 0.0125,
+            "lag1": 0.25,
+            "lag2": 0.25,
+            "cycle10": 0.25,
+            "pair_link": 0.06542968750000003,
+            "triple_link": 0.014862304646521806,
+            "cluster_rate": 0.33749999999999986,
+            "last_sum": 0.5287500000000003,
+            "last_even": 0.6000000000000009,
+            "last_head": 0.4750000000000007,
+            "last_tail": 0.47777777777777725,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Weighted sampling without replacement; main-set probabilities marginalize Power bonus."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Không chuyển tuple/chọn 20 số kết quả thành vé chơi; dùng bảng luật đúng bậc hoặc cặp số của sản phẩm."
+      },
+      "elapsed_seconds": 2.996512471996539,
+      "learned_this_run": 128
+    },
+    {
+      "product": "bingo18",
+      "display_name": "Bingo18",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:17.433826+00:00",
+      "last_id": 189513,
+      "last_date": "2026-10-03",
+      "target_id": 189514,
+      "draws_learned": 128,
+      "first_learned_id": 189083,
+      "historical_draws_available": 105639,
+      "missing_ids_inside_range": 752,
+      "date_anomalies": 0,
+      "history_sha256": "b880cf9696b313658ec2eb7db415aef2b05c6446b7fa68de2823f76ae2ead793",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "dice",
+          "kind": "digit",
+          "scope": "one_position_tuple",
+          "top": [
+            {
+              "numbers": [
+                6,
+                4,
+                3
+              ],
+              "p_model": 0.004658445415509638,
+              "p_fair": 0.004629629629629629,
+              "p_deployed": 0.004629629629629629,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.1641025641025641,
+                "ema10": 0.1808782578228549,
+                "ema100": 0.16757763723752575,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.07552083333333333,
+                "triple_link": 0.0017361111240461469
+              }
+            },
+            {
+              "numbers": [
+                3,
+                4,
+                3
+              ],
+              "p_model": 0.004655971069173718,
+              "p_fair": 0.004629629629629629,
+              "p_deployed": 0.004629629629629629,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.1564102564102564,
+                "ema10": 0.16395675629495035,
+                "ema100": 0.16050625040901326,
+                "log_gap": 0.1997154849035994,
+                "gap_censored": 0.0,
+                "pair_link": 0.052951388888888895,
+                "triple_link": 0.0011574074160307646
+              }
+            },
+            {
+              "numbers": [
+                6,
+                4,
+                4
+              ],
+              "p_model": 0.004655808435027924,
+              "p_fair": 0.004629629629629629,
+              "p_deployed": 0.004629629629629629,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.17948717948717952,
+                "ema10": 0.201572722867029,
+                "ema100": 0.1793588382440393,
+                "log_gap": 0.19971548490359936,
+                "gap_censored": 0.0,
+                "pair_link": 0.0546875,
+                "triple_link": 0.0011574074160307646
+              }
+            },
+            {
+              "numbers": [
+                3,
+                4,
+                4
+              ],
+              "p_model": 0.004655291665710119,
+              "p_fair": 0.004629629629629629,
+              "p_deployed": 0.004629629629629629,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.17179487179487177,
+                "ema10": 0.18465122133912446,
+                "ema100": 0.17228745141552682,
+                "log_gap": 0.2608015336952097,
+                "gap_censored": 0.0,
+                "pair_link": 0.03211805555555556,
+                "triple_link": 0.0005787037080153823
+              }
+            },
+            {
+              "numbers": [
+                6,
+                3,
+                3
+              ],
+              "p_model": 0.0046526518608728034,
+              "p_fair": 0.004629629629629629,
+              "p_deployed": 0.004629629629629629,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.18974358974358974,
+                "ema10": 0.20363505751496003,
+                "ema100": 0.1824408289379005,
+                "log_gap": 0.18483924814931874,
+                "gap_censored": 0.0,
+                "pair_link": 0.06857638888888888,
+                "triple_link": 0.004050926072522998
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.1665220402441905,
+            0.16657907801998006,
+            0.1668858175171537,
+            0.1663930293628581,
+            0.16665895025184005,
+            0.16696108460397766,
+            0.16592160267190825,
+            0.16663331800432202,
+            0.1669583484152262,
+            0.16712044567275136,
+            0.16653900175019495,
+            0.16682728348559728,
+            0.16646838191164376,
+            0.16672198679969333,
+            0.16690432468212246,
+            0.16682277016323002,
+            0.16651220541803105,
+            0.16657033102527943
+          ],
+          "marginals_deployed": [
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666,
+            0.16666666666666666
+          ],
+          "expert_weights": {
+            "uniform": 0.846347272130395,
+            "logistic_l2_.001": 0.01215281664167817,
+            "logistic_l2_.01": 0.01630443804422179,
+            "gru": 0.11555437902797878,
+            "rf": 0.0011218921515136068,
+            "xgb": 0.004332512178266927,
+            "lgb": 0.00418668982594545
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.004482649265910928,
+            "log10_likelihood_ratio_exploratory": -0.18689182468730672,
+            "brier_observed_rates": 0.13895623605408133,
+            "brier_fair": 0.13888888888888914,
+            "expert_mean_nll": {
+              "uniform": 5.375278407684164,
+              "logistic_l2_.001": 5.392053325552543,
+              "logistic_l2_.01": 5.388910346630176,
+              "gru": 5.377797488904292,
+              "rf": 5.446741978560195,
+              "xgb": 5.414415210547063,
+              "lgb": 5.414590115422231
+            },
+            "reliability": [
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 1728,
+                "predicted": 0.1666666666666666,
+                "observed": 0.16666666666666666
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.5833333333333334,
+            "position": 0.5,
+            "freq_all": 0.16666666666666666,
+            "ma10": 0.1666666666666667,
+            "ma50": 0.16666666666666669,
+            "ema10": 0.16666666666666669,
+            "ema100": 0.16666666666666663,
+            "log_gap": 0.32764544454524724,
+            "gap_censored": 0.05555555555555555,
+            "lag1": 0.16666666666666666,
+            "lag2": 0.16666666666666666,
+            "cycle10": 0.16666666666666666,
+            "pair_link": 0.02734375,
+            "triple_link": 0.0011574074354333181,
+            "cluster_rate": 0.14814814814814814,
+            "last_sum": 0.7222222222222219,
+            "last_even": 0.6666666666666665,
+            "last_head": 0.0,
+            "last_tail": 0.48148148148148157,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Independent categorical positions; Max tier occurrences are pooled, not prize-value predictions."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Không chuyển tuple/chọn 20 số kết quả thành vé chơi; dùng bảng luật đúng bậc hoặc cặp số của sản phẩm."
+      },
+      "elapsed_seconds": 1.1804779800004326,
+      "learned_this_run": 128
+    },
+    {
+      "product": "max3d",
+      "display_name": "Max 3D / Max 3D+",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:18.903950+00:00",
+      "last_id": 1140,
+      "last_date": "2026-10-02",
+      "target_id": 1141,
+      "draws_learned": 128,
+      "first_learned_id": 1013,
+      "historical_draws_available": 1140,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "6661d9126c9a1cddd04bdf04d5717ea5a96c2726b352805b90bf88a81932e108",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "digits",
+          "kind": "digit",
+          "scope": "one_position_tuple",
+          "top": [
+            {
+              "numbers": [
+                4,
+                5,
+                8
+              ],
+              "p_model": 0.0010263223035126073,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09564102564102567,
+                "ema10": 0.09327468070362029,
+                "ema100": 0.09691137565406065,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.00963892227564102,
+                "triple_link": 0.0008228184112037221
+              }
+            },
+            {
+              "numbers": [
+                4,
+                6,
+                8
+              ],
+              "p_model": 0.001025257974269388,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.0993589743589744,
+                "ema10": 0.10304149216493104,
+                "ema100": 0.09968173942585422,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.010015775240384609,
+                "triple_link": 0.0008526517388721307
+              }
+            },
+            {
+              "numbers": [
+                4,
+                0,
+                8
+              ],
+              "p_model": 0.001023899728013329,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09705128205128206,
+                "ema10": 0.09834845997779702,
+                "ema100": 0.0980816192104158,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.00978190104166666,
+                "triple_link": 0.0008344159771998724
+              }
+            },
+            {
+              "numbers": [
+                8,
+                5,
+                8
+              ],
+              "p_model": 0.0010229238763963845,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09807692307692308,
+                "ema10": 0.09742788970144471,
+                "ema100": 0.09889081835822795,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.00988832131410256,
+                "triple_link": 0.0008442274993285537
+              }
+            },
+            {
+              "numbers": [
+                4,
+                5,
+                0
+              ],
+              "p_model": 0.0010223863861707689,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09589743589743589,
+                "ema10": 0.10124455033330525,
+                "ema100": 0.09749386362507691,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.009682491987179484,
+                "triple_link": 0.000826389470603317
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.0991286215399299,
+            0.09975226416994523,
+            0.10030911145802515,
+            0.09964705253219885,
+            0.10105535414768904,
+            0.10050930462154932,
+            0.09885243466149674,
+            0.0994274537025335,
+            0.10074123648766617,
+            0.10057716667896616,
+            0.10056947454001788,
+            0.09950998600555155,
+            0.0991634139048932,
+            0.09955009124045537,
+            0.09971844539441926,
+            0.10079470619610896,
+            0.10070011644801835,
+            0.10007952775503054,
+            0.09973885944134074,
+            0.10017537907416421,
+            0.10031796513419203,
+            0.10000291752655148,
+            0.10009192119510532,
+            0.09991453699731406,
+            0.0999084329266553,
+            0.09995187420698168,
+            0.09956155798323407,
+            0.09995926837597907,
+            0.10067890778221637,
+            0.09961261787177071
+          ],
+          "marginals_deployed": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "expert_weights": {
+            "uniform": 0.6063080252596963,
+            "logistic_l2_.001": 0.03870574327919283,
+            "logistic_l2_.01": 0.06168012222191682,
+            "gru": 0.09996347220540247,
+            "rf": 0.018272859211246825,
+            "xgb": 0.08246055155078981,
+            "lgb": 0.09260922627174421
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.0009133858904718887,
+            "log10_likelihood_ratio_exploratory": -0.038081131399702005,
+            "brier_observed_rates": 0.004489758706345891,
+            "brier_fair": 0.004489583333333338,
+            "expert_mean_nll": {
+              "uniform": 138.15510557964265,
+              "logistic_l2_.001": 138.15755710419194,
+              "logistic_l2_.01": 138.15297025674457,
+              "gru": 138.15509933060045,
+              "rf": 138.1746325225114,
+              "xgb": 138.15709434701634,
+              "lgb": 138.15562125674722
+            },
+            "reliability": [
+              {
+                "count": 1510,
+                "predicted": 0.09934259445061241,
+                "observed": 0.09927152317880772
+              },
+              {
+                "count": 1370,
+                "predicted": 0.10072458567852186,
+                "observed": 0.10080291970802874
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.45,
+            "position": 0.5,
+            "freq_all": 0.1,
+            "ma10": 0.10000000000000002,
+            "ma50": 0.1,
+            "ema10": 0.10000000000000002,
+            "ema100": 0.1,
+            "log_gap": 0.14944183899487345,
+            "gap_censored": 0.0,
+            "lag1": 0.10000000000000002,
+            "lag2": 0.1,
+            "cycle10": 0.1,
+            "pair_link": 0.010081129807692303,
+            "triple_link": 0.0008690000472900768,
+            "cluster_rate": 0.10388888888888892,
+            "last_sum": 0.44333333333333336,
+            "last_even": 0.46666666666666673,
+            "last_head": 0.0,
+            "last_tail": 0.4925925925925924,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Independent categorical positions; Max tier occurrences are pooled, not prize-value predictions."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Không chuyển tuple/chọn 20 số kết quả thành vé chơi; dùng bảng luật đúng bậc hoặc cặp số của sản phẩm."
+      },
+      "elapsed_seconds": 1.453233164997073,
+      "learned_this_run": 128
+    },
+    {
+      "product": "max3dpro",
+      "display_name": "Max 3D Pro",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:20.203597+00:00",
+      "last_id": 787,
+      "last_date": "2026-10-03",
+      "target_id": 788,
+      "draws_learned": 128,
+      "first_learned_id": 660,
+      "historical_draws_available": 787,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "f40a9761c25398418f62877cc1441079407232355836bf3bb1b0f476de70ea0c",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "digits",
+          "kind": "digit",
+          "scope": "one_position_tuple",
+          "top": [
+            {
+              "numbers": [
+                1,
+                0,
+                0
+              ],
+              "p_model": 0.001001847856027247,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09705128205128204,
+                "ema10": 0.10507546442578153,
+                "ema100": 0.09842019829880526,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.009740104166666663,
+                "triple_link": 0.0008273601221541563
+              }
+            },
+            {
+              "numbers": [
+                1,
+                7,
+                0
+              ],
+              "p_model": 0.0010018277580143137,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09897435897435897,
+                "ema10": 0.10442438083853477,
+                "ema100": 0.09935607996746494,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.009976562499999996,
+                "triple_link": 0.0008447986911050975
+              }
+            },
+            {
+              "numbers": [
+                1,
+                2,
+                0
+              ],
+              "p_model": 0.0010016630900118759,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09820512820512818,
+                "ema10": 0.10522524972969118,
+                "ema100": 0.09928769909633665,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.00986536458333333,
+                "triple_link": 0.0008342674506517748
+              }
+            },
+            {
+              "numbers": [
+                1,
+                0,
+                1
+              ],
+              "p_model": 0.0010016417404541842,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09602564102564104,
+                "ema10": 0.09781690542663367,
+                "ema100": 0.09741835042668408,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.009639583333333328,
+                "triple_link": 0.0008170954727878174
+              }
+            },
+            {
+              "numbers": [
+                1,
+                7,
+                1
+              ],
+              "p_model": 0.0010016182723765973,
+              "p_fair": 0.001,
+              "p_deployed": 0.001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09794871794871796,
+                "ema10": 0.09716582183938688,
+                "ema100": 0.09835423209534377,
+                "log_gap": 0.13862943611198905,
+                "gap_censored": 0.0,
+                "pair_link": 0.009876041666666661,
+                "triple_link": 0.0008345340417387584
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.10003946011366156,
+            0.10007212199919381,
+            0.09999168767048008,
+            0.09993921811768632,
+            0.10004749266716374,
+            0.10004554446720415,
+            0.10003859038198659,
+            0.09997892109326904,
+            0.09991008385517432,
+            0.09993687963418048,
+            0.10005408330592137,
+            0.10000232036109075,
+            0.10003627387511797,
+            0.10002396271977783,
+            0.09996032462211348,
+            0.10000903486095192,
+            0.09998956150821203,
+            0.10005402623532564,
+            0.09993321740749472,
+            0.09993719510399436,
+            0.1000562884285421,
+            0.1000345980658736,
+            0.10002211946462135,
+            0.10001626516467708,
+            0.09996442051987062,
+            0.0999851215807172,
+            0.09995987215742351,
+            0.10001865099443248,
+            0.09998094457259929,
+            0.09996171905124279
+          ],
+          "marginals_deployed": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "expert_weights": {
+            "uniform": 0.7132603413218365,
+            "logistic_l2_.001": 0.04240222155188224,
+            "logistic_l2_.01": 0.1177722877410367,
+            "gru": 0.12191942048960228,
+            "rf": 0.0003961371273599778,
+            "xgb": 0.0030700311980984166,
+            "lgb": 0.0011795605701868802
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": -0.00447850068338429,
+            "log10_likelihood_ratio_exploratory": -0.18671886086339898,
+            "brier_observed_rates": 0.004402540569550394,
+            "brier_fair": 0.00440104166666667,
+            "expert_mean_nll": {
+              "uniform": 138.15510557964265,
+              "logistic_l2_.001": 138.17021117959447,
+              "logistic_l2_.01": 138.15814644601627,
+              "gru": 138.15492422164235,
+              "rf": 138.24711972554772,
+              "xgb": 138.19576219260074,
+              "lgb": 138.2119024651773
+            },
+            "reliability": [
+              {
+                "count": 1462,
+                "predicted": 0.09974146473286506,
+                "observed": 0.10095759233926097
+              },
+              {
+                "count": 1418,
+                "predicted": 0.10026655751801918,
+                "observed": 0.09901269393511933
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.45,
+            "position": 0.5,
+            "freq_all": 0.1,
+            "ma10": 0.09999999999999999,
+            "ma50": 0.09999999999999996,
+            "ema10": 0.1,
+            "ema100": 0.1,
+            "log_gap": 0.15406282019860643,
+            "gap_censored": 0.0,
+            "lag1": 0.10000000000000002,
+            "lag2": 0.1,
+            "cycle10": 0.09999999999999999,
+            "pair_link": 0.010031249999999993,
+            "triple_link": 0.0008614833660734196,
+            "cluster_rate": 0.10611111111111114,
+            "last_sum": 0.46666666666666673,
+            "last_even": 0.4000000000000002,
+            "last_head": 0.0,
+            "last_tail": 0.5185185185185187,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Independent categorical positions; Max tier occurrences are pooled, not prize-value predictions."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Không chuyển tuple/chọn 20 số kết quả thành vé chơi; dùng bảng luật đúng bậc hoặc cặp số của sản phẩm."
+      },
+      "elapsed_seconds": 1.2872454280004604,
+      "learned_this_run": 128
+    },
+    {
+      "product": "max4d",
+      "display_name": "Max 4D (đã ngừng)",
+      "version": 2,
+      "made_at": "2026-10-03T16:15:22.410607+00:00",
+      "last_id": 722,
+      "last_date": "2021-08-31",
+      "target_id": null,
+      "draws_learned": 128,
+      "first_learned_id": 595,
+      "historical_draws_available": 722,
+      "missing_ids_inside_range": 0,
+      "date_anomalies": 0,
+      "history_sha256": "49f7d678f136fa4fad797cc3bb0d6d4fe274794d7416886132f51d17a5d9ca9b",
+      "config": {
+        "bootstrap": 128,
+        "warmup": 32,
+        "tree_every": 64,
+        "tree_buffer": 64,
+        "search_nodes": 50,
+        "backends": [
+          "rf",
+          "xgb",
+          "lgb"
+        ],
+        "seed": 20261003
+      },
+      "confidence": {
+        "validated": false,
+        "status": "insufficient_live_evidence",
+        "scored_live": 0,
+        "log10_e_current": 0.0,
+        "log10_e_max": 0.0,
+        "threshold_e": 140,
+        "family_adjusted_anytime_p": 1.0,
+        "confidence_score": null,
+        "note": "Chỉ kiểm định live đã ghi trước kỳ quay; đây không phải xác suất trúng vé. Backtest hồi cứu là thử nghiệm."
+      },
+      "warnings": [],
+      "components": [
+        {
+          "name": "digits",
+          "kind": "digit",
+          "scope": "one_position_tuple",
+          "top": [
+            {
+              "numbers": [
+                7,
+                9,
+                8,
+                6
+              ],
+              "p_model": 0.00012036555915329093,
+              "p_fair": 0.0001,
+              "p_deployed": 0.0001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.10121794871794869,
+                "ema10": 0.1016091067200614,
+                "ema100": 0.10069052457742779,
+                "log_gap": 0.27647145437557114,
+                "gap_censored": 0.0,
+                "pair_link": 0.009150752314814816,
+                "triple_link": 0.0007570367743028328
+              }
+            },
+            {
+              "numbers": [
+                7,
+                9,
+                8,
+                1
+              ],
+              "p_model": 0.00012005435382640318,
+              "p_fair": 0.0001,
+              "p_deployed": 0.0001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09897435897435894,
+                "ema10": 0.09271880889345392,
+                "ema100": 0.09887838162893789,
+                "log_gap": 0.2908555579981602,
+                "gap_censored": 0.0,
+                "pair_link": 0.009045259452160495,
+                "triple_link": 0.0007530737639172003
+              }
+            },
+            {
+              "numbers": [
+                7,
+                9,
+                4,
+                6
+              ],
+              "p_model": 0.00011973421562540638,
+              "p_fair": 0.0001,
+              "p_deployed": 0.0001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.10185897435897431,
+                "ema10": 0.09604687777396195,
+                "ema100": 0.10026058490644714,
+                "log_gap": 0.2620873507529821,
+                "gap_censored": 0.0,
+                "pair_link": 0.009205005787037038,
+                "triple_link": 0.0007604416314279661
+              }
+            },
+            {
+              "numbers": [
+                7,
+                9,
+                4,
+                1
+              ],
+              "p_model": 0.0001194112285108172,
+              "p_fair": 0.0001,
+              "p_deployed": 0.0001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.09961538461538456,
+                "ema10": 0.08715657994735447,
+                "ema100": 0.09844844195795724,
+                "log_gap": 0.2764714543755712,
+                "gap_censored": 0.0,
+                "pair_link": 0.009099512924382717,
+                "triple_link": 0.0007564786210423335
+              }
+            },
+            {
+              "numbers": [
+                7,
+                9,
+                5,
+                6
+              ],
+              "p_model": 0.00011908228164995773,
+              "p_fair": 0.0001,
+              "p_deployed": 0.0001,
+              "explanation": "Xếp hạng theo mixture của các expert được chấm trước khi học. Hot/cold và gap là đặc trưng mô tả, không chứng minh số đến hạn.",
+              "feature_support": {
+                "freq_all": 0.0999358974358974,
+                "ema10": 0.0957115792286625,
+                "ema100": 0.09990502936890008,
+                "log_gap": 0.2620873507529821,
+                "gap_censored": 0.0,
+                "pair_link": 0.00917185088734568,
+                "triple_link": 0.0007733352831564844
+              }
+            }
+          ],
+          "ranking_exact": true,
+          "marginals_model": [
+            0.09742362677046142,
+            0.09259810041605927,
+            0.10351527039050884,
+            0.10460419514465519,
+            0.10544271393180374,
+            0.09547672733641782,
+            0.09907207266669156,
+            0.1067376146389443,
+            0.09749056597231273,
+            0.09763911273214519,
+            0.09431919042638257,
+            0.10277531271827017,
+            0.10084513057347554,
+            0.10087154240579405,
+            0.0994359775504888,
+            0.10294527746189563,
+            0.09624584913063737,
+            0.0954388685860203,
+            0.10246231385055116,
+            0.10466053729648447,
+            0.10028237058619488,
+            0.10211532417160565,
+            0.09480886226617638,
+            0.09975459798033139,
+            0.102601044762887,
+            0.1021420349499649,
+            0.09759728291390422,
+            0.09597310486769761,
+            0.10306612587861623,
+            0.10165925162262181,
+            0.0980762988860448,
+            0.10299760104935722,
+            0.10099581851818122,
+            0.09643532603323815,
+            0.10223711633136837,
+            0.09773546646070698,
+            0.10323953939814857,
+            0.10084220915234782,
+            0.09868813901117832,
+            0.09875248515942858
+          ],
+          "marginals_deployed": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+          ],
+          "expert_weights": {
+            "uniform": 0.4336046300536153,
+            "logistic_l2_.001": 0.012578052329418285,
+            "logistic_l2_.01": 0.03675156918449893,
+            "gru": 0.07294490038050486,
+            "rf": 0.07732146259171242,
+            "xgb": 0.0897832086432705,
+            "lgb": 0.2770161768169793
+          },
+          "metrics": {
+            "scored_draws": 96,
+            "mean_log_gain_nats": 0.0016442866128336675,
+            "log10_likelihood_ratio_exploratory": 0.06855404185162084,
+            "brier_observed_rates": 0.014869210788634428,
+            "brier_fair": 0.014869791666666661,
+            "expert_mean_nll": {
+              "uniform": 55.262042231857016,
+              "logistic_l2_.001": 55.28559987907865,
+              "logistic_l2_.01": 55.27048116543162,
+              "gru": 55.26221519651284,
+              "rf": 55.26108695799874,
+              "xgb": 55.25909777576778,
+              "lgb": 55.24735515880051
+            },
+            "reliability": [
+              {
+                "count": 1989,
+                "predicted": 0.09851952904384965,
+                "observed": 0.09753645047762656
+              },
+              {
+                "count": 1851,
+                "predicted": 0.10159084642451804,
+                "observed": 0.10264721772015087
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              },
+              {
+                "count": 0,
+                "predicted": null,
+                "observed": null
+              }
+            ],
+            "evaluation": "retrospective_prequential_exploratory"
+          },
+          "features": {
+            "symbol": 0.45,
+            "position": 0.5,
+            "freq_all": 0.09999999999999991,
+            "ma10": 0.10000000000000002,
+            "ma50": 0.09999999999999999,
+            "ema10": 0.09999999999999999,
+            "ema100": 0.0999999999999999,
+            "log_gap": 0.2052381850463712,
+            "gap_censored": 0.0,
+            "lag1": 0.09999999999999999,
+            "lag2": 0.09999999999999998,
+            "cycle10": 0.09999999999999996,
+            "pair_link": 0.009620949074074075,
+            "triple_link": 0.0007600620214361697,
+            "cluster_rate": 0.07777777777777775,
+            "last_sum": 0.4083333333333333,
+            "last_even": 0.4999999999999999,
+            "last_head": 0.0,
+            "last_tail": 0.4537037037037036,
+            "id_gap": 0.0,
+            "elapsed_days": 0.0
+          },
+          "assumptions": "Independent categorical positions; Max tier occurrences are pooled, not prize-value predictions."
+        }
+      ],
+      "portfolio": {
+        "budget_vnd": 0,
+        "spent_vnd": 0,
+        "tickets": [],
+        "note": "Không chuyển tuple/chọn 20 số kết quả thành vé chơi; dùng bảng luật đúng bậc hoặc cặp số của sản phẩm."
+      },
+      "elapsed_seconds": 2.199438031995669,
+      "learned_this_run": 128
+    }
+  ],
+  "evaluation": "retrospective_prequential_exploratory",
+  "data": "bundled seed plus committed results journal; local product caches created by replay",
+  "replay_conflicts": []
+}

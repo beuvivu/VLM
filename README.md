@@ -4,6 +4,8 @@ Hệ thống phân tích định lượng cho **toàn bộ sản phẩm** xổ s
 
 **Rà soát VLM 03/10/2026:** [Audit Matrix và kết quả kiểm đếm](reports/VLM_AUDIT_2026-10-03.md), [vận hành crawler, cào bù và đối soát vé](docs/VLM_INTEGRITY.md). API `vlm` nằm trong `src/vlm/`; dữ liệu hiện còn thiếu 384 kỳ Keno và 83.654 kỳ Bingo18, nên chưa chứng nhận lịch sử đầy đủ đến hiện tại.
 
+**ML và tự học sau kỳ quay:** [hướng dẫn CLI/API](docs/VLM_ML_FORECAST.md), [kiểm định dữ liệu thật](reports/VLM_ML_2026-10-03.md). Thêm GRU với backpropagation, logistic online, Random Forest và optional XGBoost/LightGBM; crawler tự gọi học sau khi lưu kết quả. `vlm-forecast next --product mega645 --top-n 10` trả xác suất tổ hợp, diagnostics và confidence có kiểm định. Benchmark mới chưa cải thiện log-loss so với fair; giữ xác suất triển khai theo fair cho đến khi có bằng chứng live. Snapshot mới có 538 gap Keno, 83.874 ID Bingo18 còn thiếu từ kỳ đầu và 11 date anomaly Keno, nên các số đếm audit seed ở dòng trên là mốc lịch sử.
+
 > **Cài đặt nhanh** (chi tiết: [docs/INSTALL.md](docs/INSTALL.md))
 > - **Windows:** giải nén, bấm đúp `install.cmd` (chưa có Python: `install.cmd -InstallPython`). Sau đó, trong thư mục này: `vietlott forecast next` (Command Prompt) hoặc `.\vietlott.cmd forecast next` (PowerShell).
 > - **Linux / macOS:** `bash install.sh`, rồi `./vietlott forecast next`.

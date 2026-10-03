@@ -31,7 +31,7 @@ def main(argv: list[str] | None = None) -> int:
     from vietlott_engine.api.deps import AppState
     from vietlott_engine.api.main import _seed
     from vietlott_engine.crawler.storage import DuckDBRepository, InMemoryRepository
-    from vlm.updates.service import make_runner, replay_results
+    from vlm.updates.service import finish_learning, make_runner, replay_results
 
     try:
         with WriterLease(directory / 'writer.lock'):
@@ -40,14 +40,17 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 state = AppState(settings, repo)
                 async def run():
-                    await _seed(state)
-                    replay_results(state)
-                    runner = make_runner(state)
-                    if args.product != 'all':
-                        runner.products = (args.product,)
-                    if args.once:
-                        return await runner.tick(force=args.force)
-                    await runner.run_forever()
+                    try:
+                        await _seed(state)
+                        replay_results(state)
+                        runner = make_runner(state)
+                        if args.product != 'all':
+                            runner.products = (args.product,)
+                        if args.once:
+                            return await runner.tick(force=args.force)
+                        await runner.run_forever()
+                    finally:
+                        await finish_learning(state)
                 result = asyncio.run(run())
                 if result is not None:
                     print(json.dumps(result, ensure_ascii=False, indent=2))

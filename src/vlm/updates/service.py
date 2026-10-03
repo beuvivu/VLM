@@ -166,7 +166,8 @@ def replay_results(state) -> int:  # type: ignore[no-untyped-def]
     return len(records)
 
 
-async def sync_matrix(state, spec, *, source: str | None = None, full_refresh: bool = False) -> dict:  # type: ignore[no-untyped-def]
+async def sync_matrix(state, spec, *, source: str | None = None, full_refresh: bool = False,
+                      learn: bool = True) -> dict:  # type: ignore[no-untyped-def]
     async with state.sync_lock(spec.code.value):
         before = {(d.game.value,d.draw_id):_identity(_matrix_record(d)) for d in state.repository.load(spec.code)}
         async with build_http_client(state.settings) as client:
@@ -174,10 +175,11 @@ async def sync_matrix(state, spec, *, source: str | None = None, full_refresh: b
         draws = state.repository.load(spec.code)
         _append(state, [_matrix_record(d) for d in draws], baseline=before)
         state.invalidate(spec)
-        return report.to_dict()
+    return {**report.to_dict(), 'learning':await _learn(state, spec.code.value) if learn else None}
 
 
-async def sync_product(state, code, *, source: str = 'auto', max_pages: int | None = None, full: bool = False) -> dict:  # type: ignore[no-untyped-def]
+async def sync_product(state, code, *, source: str = 'auto', max_pages: int | None = None, full: bool = False,
+                       learn: bool = True) -> dict:  # type: ignore[no-untyped-def]
     async with state.sync_lock(code.value):
         s, store = state.settings, state.product_store()
         history = await asyncio.to_thread(store.load, code, include_unconfirmed=True)
@@ -194,15 +196,48 @@ async def sync_product(state, code, *, source: str = 'auto', max_pages: int | No
         records = await asyncio.to_thread(_product_records, code, h, before, journal_ids, report.source_used or source)
         _append(state, records)
         state.invalidate_product(code)
-        return report.to_dict()
+    return {**report.to_dict(), 'learning':await _learn(state, code.value) if learn else None}
 
 
-async def update_product(state, product: str) -> dict:  # type: ignore[no-untyped-def]
+async def _learn(state, product: str) -> dict:  # type: ignore[no-untyped-def]
+    if not state.settings.ml_auto_update_enabled:
+        return {'enabled':False, 'error':None}
+    from vlm.forecast.service import refresh_models
+    job = state._ml_jobs.get(product)
+    if job is None:
+        async def guarded_refresh():
+            async with state.sync_lock(product):
+                return await refresh_models(state, product)
+        job = asyncio.create_task(guarded_refresh(), name=f'vlm-learn-{product}')
+        state._ml_jobs[product] = job
+        def done(task):
+            if state._ml_jobs.get(product) is task:
+                state._ml_jobs.pop(product, None)
+            if not task.cancelled():
+                task.exception()  # consume an error even after the caller timed out
+        job.add_done_callback(done)
+    try:
+        return await asyncio.wait_for(asyncio.shield(job), state.settings.ml_learning_timeout_s)
+    except TimeoutError:
+        # A Python fitting thread cannot be killed safely. Keep it tracked and
+        # drain it before closing storage; no duplicate job is queued on retry.
+        return {'enabled':True, 'error':'TimeoutError', 'pending':True}
+    except Exception as exc:
+        return {'enabled':True, 'error':type(exc).__name__}
+
+
+async def finish_learning(state) -> None:  # type: ignore[no-untyped-def]
+    """Do not close storage while an uncancellable fitting thread still uses it."""
+    if state._ml_jobs:
+        await asyncio.gather(*list(state._ml_jobs.values()), return_exceptions=True)
+
+
+async def update_product(state, product: str, *, learn: bool = True) -> dict:  # type: ignore[no-untyped-def]
     """Persist results first; prize-table unavailability never discards results."""
     prize_error = None
     if product in GAMES:
         spec = get_game(product)
-        report = await sync_matrix(state, spec, source='auto')
+        report = await sync_matrix(state, spec, source='auto', learn=False)
         draws = state.repository.load(spec.code)
         last = max(draws, key=lambda d:d.draw_id) if draws else None
         last_date = last.draw_date.isoformat() if last else None
@@ -221,25 +256,31 @@ async def update_product(state, product: str) -> dict:  # type: ignore[no-untype
         except Exception as exc:
             prize_error = type(exc).__name__
         return {'last_draw_id':last.draw_id if last else None, 'last_draw_date':last_date,
-                'draws_on_last_date':count, 'inserted':report['inserted'], 'source':report['source'], 'prize_error':prize_error}
+                'draws_on_last_date':count, 'inserted':report['inserted'], 'source':report['source'], 'prize_error':prize_error,
+                'learning':await _learn(state, product) if learn else None}
     code = ProductCode(product)
-    report = await sync_product(state, code)
+    report = await sync_product(state, code, learn=False)
     h = state.product_store().load(code)
     count = int((h.dates == h.dates[-1]).sum()) if len(h) else 0
     return {'last_draw_id':report['last_id'], 'last_draw_date':report['last_date'], 'draws_on_last_date':count,
-            'inserted':report['inserted'], 'source':report['source_used'], 'error':report['error']}
+            'inserted':report['inserted'], 'source':report['source_used'], 'error':report['error'],
+            'learning':await _learn(state, product) if learn else None}
 
 
 def make_runner(state):  # type: ignore[no-untyped-def]
     from vlm.updates.runner import UpdateRunner
     return UpdateRunner(journal_path(state).parent / 'status.json',
-                        lambda product:update_product(state, product), timeout_s=state.settings.auto_update_timeout_s)
+                        lambda product:update_product(state, product, learn=False),
+                        learn=lambda product:_learn(state, product), timeout_s=state.settings.auto_update_timeout_s)
 
 
 async def periodic_updates(state) -> None:  # type: ignore[no-untyped-def]
     replay_results(state)
     state.updater = make_runner(state)
-    await state.updater.run_forever()
+    try:
+        await state.updater.run_forever()
+    finally:
+        await finish_learning(state)
 
 
 def update_status(state) -> dict:  # type: ignore[no-untyped-def]

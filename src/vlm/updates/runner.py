@@ -17,12 +17,14 @@ from vlm.updates.schedule import LIVE_PRODUCTS, freshness, poll_interval, slot_k
 class UpdateRunner:
     def __init__(self, path: Path, update: Callable[[str], Awaitable[dict]], *,
                  products: tuple[str, ...] = LIVE_PRODUCTS, clock: Callable[[], datetime] | None = None,
-                 timeout_s: float = 180, concurrency: int = 7) -> None:
+                 timeout_s: float = 180, concurrency: int = 7,
+                 learn: Callable[[str], Awaitable[dict]] | None = None) -> None:
         if timeout_s <= 0 or concurrency < 1 or any(p not in LIVE_PRODUCTS for p in products):
             raise ValueError('Invalid updater timeout, concurrency or live product')
         self.path, self.update, self.products = Path(path), update, tuple(dict.fromkeys(products))
         self.clock = clock or (lambda: datetime.now(VN))
         self.timeout_s = timeout_s
+        self.learn = learn
         self._slots = asyncio.Semaphore(concurrency)
         self._inflight: dict[str, asyncio.Task] = {}
         self._state = {'version': 1, 'timezone': 'Asia/Ho_Chi_Minh', 'products': {}}
@@ -121,7 +123,7 @@ class UpdateRunner:
                 if result.get('last_draw_id') is not None and (previous_id is None or result['last_draw_id'] > previous_id):
                     entry['last_draw_advance'] = vietnam_time(self.clock()).isoformat()
                 entry.update({key: result.get(key) for key in
-                              ('last_draw_id', 'last_draw_date', 'draws_on_last_date', 'inserted', 'source', 'prize_error')})
+                              ('last_draw_id', 'last_draw_date', 'draws_on_last_date', 'inserted', 'source', 'prize_error', 'learning')})
                 entry.update(last_success=vietnam_time(self.clock()).isoformat(), failures=0, error=None)
                 entry['freshness'] = self._freshness(product, entry, vietnam_time(self.clock()))
                 if result.get('inserted', 0) > 0:
@@ -138,6 +140,19 @@ class UpdateRunner:
             entry['next_attempt'] = (vietnam_time(self.clock()) + timedelta(seconds=delay)).isoformat()
             self._state['updated_at'] = vietnam_time(self.clock()).isoformat()
             self._save()
+            # Persist source success before independent model work. Its deadline
+            # and errors must never turn a saved draw into a source failure.
+            if self.learn is not None and entry.get('error') is None:
+                entry['learning'] = {'enabled':True, 'status':'running', 'error':None}
+                self._save()
+                try:
+                    entry['learning'] = await self.learn(product)
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    entry['learning'] = {'enabled':True, 'error':type(exc).__name__}
+                self._state['updated_at'] = vietnam_time(self.clock()).isoformat()
+                self._save()
 
     async def run_forever(self) -> None:
         try:

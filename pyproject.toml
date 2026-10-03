@@ -37,11 +37,13 @@ dependencies = [
 dev = ["pytest>=8.2", "ruff>=0.6", "mypy>=1.11", "pyyaml>=6"]
 crawler = ["curl_cffi>=0.13,<1"]
 postgres = ["psycopg[binary]>=3.2,<4"]
+ml = ["xgboost>=2.0,<4", "lightgbm>=4.0,<5"]
 
 [project.scripts]
 vietlott = "vietlott_engine.cli:main"
 vlm-audit = "vlm.tools.gap_analyzer:main"
 vlm-update = "vlm.updates.cli:main"
+vlm-forecast = "vlm.forecast.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/beuvivu/vietlott-quant-engine"

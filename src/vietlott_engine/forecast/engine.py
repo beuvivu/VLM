@@ -565,6 +565,12 @@ LEDGER = "ledger.jsonl"
 
 
 def record(directory: Path, rep: ForecastReport, pre_draw: bool = True, target_time: str | None = None) -> dict:
+    from vlm.forecast.service import forecast_guard
+    with forecast_guard(directory):
+        return _record_unlocked(directory, rep, pre_draw, target_time)
+
+
+def _record_unlocked(directory: Path, rep: ForecastReport, pre_draw: bool = True, target_time: str | None = None) -> dict:
     """Append a forecast *before* its draw: what was predicted, for which draw, when.
 
     ``pre_draw=False`` marks an entry forced in after the draw may have started; the scoreboard
@@ -613,6 +619,12 @@ def _score_entry(entry: dict, series: Series) -> dict | None:
 
 
 def score_ledger(directory: Path, series: Series) -> list[dict]:
+    from vlm.forecast.service import forecast_guard
+    with forecast_guard(directory):
+        return _score_ledger_unlocked(directory, series)
+
+
+def _score_ledger_unlocked(directory: Path, series: Series) -> list[dict]:
     """Score every recorded forecast of this product whose target draw has arrived."""
     path = Path(directory) / LEDGER
     if not path.exists():
@@ -631,6 +643,12 @@ def score_ledger(directory: Path, series: Series) -> list[dict]:
 
 
 def scoreboard(directory: Path, product: ProductCode | None = None) -> list[dict]:
+    from vlm.forecast.service import forecast_guard
+    with forecast_guard(directory):
+        return _scoreboard_unlocked(directory, product)
+
+
+def _scoreboard_unlocked(directory: Path, product: ProductCode | None = None) -> list[dict]:
     """Live track record per product: forecasts recorded before their draw, then scored."""
     path = Path(directory) / LEDGER
     if not path.exists():
@@ -658,6 +676,12 @@ def scoreboard(directory: Path, product: ProductCode | None = None) -> list[dict
 
 
 def refresh(product: str | ProductCode, series: Series, directory: Path, refit: bool = False, last: int | None = None) -> tuple[Forecaster, int, list[dict]]:
+    from vlm.forecast.service import forecast_guard
+    with forecast_guard(directory):
+        return _refresh_unlocked(product, series, directory, refit, last)
+
+
+def _refresh_unlocked(product: str | ProductCode, series: Series, directory: Path, refit: bool = False, last: int | None = None) -> tuple[Forecaster, int, list[dict]]:
     """Load the saved model (or start one), learn every new draw, score the ledger, save."""
     code = get_product(product)
     f = None

@@ -13,6 +13,7 @@ on:
     paths:
       - .github/workflows/results.yml
       - src/vlm/updates/**
+      - src/vlm/forecast/**
 
 permissions:
   contents: write
@@ -50,6 +51,7 @@ jobs:
             data/parquet
             data/products
             data/forecast/*.json
+            data/forecast/ml/*.json.gz
             data/results/status.json
           key: vqe-state-${{ github.run_id }}
           restore-keys: vqe-state-
@@ -60,10 +62,11 @@ jobs:
       - name: Giữ kết quả đã xác thực trong repo
         if: always()
         run: |
-          if [ -n "$(git status --porcelain -- data/results/results.jsonl)" ]; then
+          if [ -n "$(git status --porcelain -- data/results/results.jsonl data/forecast/ml-ledger.jsonl)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/results/results.jsonl
+            if [ -f data/forecast/ml-ledger.jsonl ]; then git add data/forecast/ml-ledger.jsonl; fi
             git commit -m "data: kết quả Vietlott $(date +%F' '%H:%M) [skip ci]"
             ok=0
             for i in 1 2 3; do
@@ -82,6 +85,7 @@ jobs:
             data/parquet
             data/products
             data/forecast/*.json
+            data/forecast/ml/*.json.gz
             data/results/status.json
           key: vqe-state-${{ github.run_id }}
       - name: Báo cáo cập nhật

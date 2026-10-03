@@ -27,6 +27,7 @@ from vietlott_engine.crawler.pipeline import SyncPipeline, build_http_client, bu
 from vietlott_engine.crawler.prize_sources import records_from_jsonl
 from vietlott_engine.crawler.sources.mirror import JsonlFileSource
 from vietlott_engine.crawler.storage import DrawRepository, DuckDBRepository, InMemoryRepository
+from vlm.forecast.api import router as ml_router
 
 log = get_logger(__name__)
 
@@ -109,6 +110,8 @@ def create_app(settings: Settings | None = None, repository: DrawRepository | No
                             await task
                 finally:
                     state.updater = None
+                    from vlm.updates.service import finish_learning
+                    await finish_learning(state)
                     close = getattr(state.repository, "close", None)
                     if callable(close):
                         await asyncio.to_thread(close)
@@ -146,6 +149,7 @@ def create_app(settings: Settings | None = None, repository: DrawRepository | No
     app.include_router(max3d.router)
     app.include_router(catalog.router)
     app.include_router(forecast.router)
+    app.include_router(ml_router)
     return app
 
 

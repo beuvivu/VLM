@@ -39,7 +39,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Cài gói và công cụ phát triển
-        run: python -m pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev,crawler]"
       - name: Ruff (lỗi đúng/sai)
         run: ruff check --select F,B023 src scripts tests
       - name: Pytest

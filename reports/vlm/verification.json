@@ -1,0 +1,66 @@
+{
+  "python": "3.12.14",
+  "pytest": {
+    "tests": 263,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 262,
+    "command": "python -m pytest -ra --junitxml=vlm-closure.xml",
+    "seconds": 106.359
+  },
+  "ruff": {
+    "command": "ruff check --select F,B023 src scripts tests",
+    "result": "passed"
+  },
+  "wheel": {
+    "command": "python -m pip wheel --no-deps --no-build-isolation .",
+    "result": "passed",
+    "sha256": "82a93c6e8b962a85bd566885af6a858ae83c07aacc090d8bcdc27d52211c2458",
+    "package_source_match": true
+  },
+  "backends": {
+    "sqlite": "roundtrip/rollback passed",
+    "duckdb": "roundtrip/rollback passed",
+    "parquet": "roundtrip passed",
+    "postgresql": "DDL compiled; live service not tested"
+  },
+  "live_repair": "3 attempted; 1 repaired; 2 unresolved",
+  "limitations": [
+    "No residential proxy/FlareSolverr service supplied",
+    "Observed maxima do not establish official latest",
+    "Existing optional DuckDB CLI test skipped"
+  ],
+  "source_files_sha256": {
+    "src/vlm/__init__.py": "59547168725c8126d905a340846f406d8407cf43c6b963ae9718b9de1c5c38e0",
+    "src/vlm/crawler/__init__.py": "e7e36869998df745bd8be10db2cf4ff9ac5eea69290a3b56406cce4aa8f0990a",
+    "src/vlm/crawler/async_scraper.py": "40f12506b0d764f465c9ee17ea3872078646ab81141e8622a8285e81d007dd15",
+    "src/vlm/crawler/sources.py": "121b00068cc57b06aae9bfbdcff83fc0e63e8c85062804990104b6eb0423f7b7",
+    "src/vlm/database/__init__.py": "8db02f192b1a4fcb3480ab61bda4521af47bd9939c50ebdaedb3d1ad03b476a9",
+    "src/vlm/database/schema.py": "8eb817c2994ae1492129131b5959f91dd113158d40d8d04c6cd9953d282b244b",
+    "src/vlm/rules/__init__.py": "44f204cd79f4b0f0da94a9e142a5a97fb055d2ddfd426a87ee824ed5d10542bd",
+    "src/vlm/rules/calculator.py": "d67c98f8186b84b1e23663eed62bb11ca1382c7a5e929ff6f1f559030a411353",
+    "src/vlm/tools/__init__.py": "9ce2d1c66e519d7fdb3f1e891850b7abe920dc70bda77998bcce1a52a8b90d9a",
+    "src/vlm/tools/gap_analyzer.py": "2031aca52ad3c3a1240c2020e0acc413ab3ebddcb204247ff7908d13399c8567"
+  },
+  "review": {
+    "result": "All eight source/repair findings resolved; final delta has no code blockers",
+    "focused_tests_passed": 85
+  },
+  "optional_crawler_extra": {
+    "check": "Simulated absence of curl_cffi; transport tests",
+    "passed": 6,
+    "skipped": 1,
+    "failures": 0
+  },
+  "ci_regression_fixes": {
+    "mhtml": "Write CRLF MHTML fixtures as bytes to prevent Windows CRCRLF translation",
+    "dotenv": "Session-scoped isolation precedes module-scoped API clients",
+    "reproduction": "3 API failures reproduced with installer-style .env; translated MHTML fixture yielded no document",
+    "focused_verification": {
+      "passed": 9,
+      "failures": 0,
+      "environment": "Temporary working directory with installer-style seed .env"
+    }
+  }
+}

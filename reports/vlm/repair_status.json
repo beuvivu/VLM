@@ -1,0 +1,22 @@
+{
+  "requested": 3,
+  "remaining_unattempted": 0,
+  "repaired": [
+    {
+      "game_type": "mega645",
+      "draw_id": 1570
+    }
+  ],
+  "failed": [
+    {
+      "game_type": "bingo18",
+      "draw_id": 149481,
+      "error": "ValueError"
+    },
+    {
+      "game_type": "keno",
+      "draw_id": 32987,
+      "error": "ValueError"
+    }
+  ]
+}

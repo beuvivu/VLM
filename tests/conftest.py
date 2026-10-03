@@ -8,13 +8,14 @@ from vietlott_engine.core.games import MEGA_645, POWER_655, GameSpec
 from vietlott_engine.core.history import DrawHistory
 
 
-@pytest.fixture(autouse=True)
-def _ignore_local_dotenv(monkeypatch: pytest.MonkeyPatch):  # type: ignore[no-untyped-def]
-    """The installers write a .env for the user; tests must not depend on it."""
-    monkeypatch.setitem(_config.Settings.model_config, "env_file", None)
-    _config.get_settings.cache_clear()
-    yield
-    _config.get_settings.cache_clear()
+@pytest.fixture(scope="session", autouse=True)
+def _ignore_local_dotenv():  # type: ignore[no-untyped-def]
+    """Disable installer .env files before module-scoped clients are created."""
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setitem(_config.Settings.model_config, "env_file", None)
+        _config.get_settings.cache_clear()
+        yield
+        _config.get_settings.cache_clear()
 
 
 def make_history(spec: GameSpec, draws: int, seed: int = 0, weights: np.ndarray | None = None) -> DrawHistory:

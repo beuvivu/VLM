@@ -94,18 +94,19 @@ async def prizes_sync(body: PrizeSyncRequest | None = None, spec: GameSpec = Dep
 
     body = body or PrizeSyncRequest()
     s = state.settings
-    async with build_http_client(s) as client:
-        if body.source == "compal":
-            pipe = PrizeSyncPipeline(client, state.repository, body.winners_base_url or s.prize_winners_base_url, body.power_history_url or s.prize_power_history_url)
-            report = (await pipe.run(spec)).to_dict()
-        else:
-            report = (
-                await sync_canonical_prizes(
-                    client, state.repository, spec, source=body.source, canonical_base_url=s.canonical_base_url,
-                    vietlott_base_url=s.vietlott_base_url, last=body.last, bootstrap_cookie=s.vietlott_cookie_bootstrap,
-                    nhanaz_base_url=s.nhanaz_base_url, nhanaz_dir=s.nhanaz_dir, v130_dir=s.v130_dir,
-                )
-            ).to_dict()
+    async with state.sync_lock(spec.code.value):
+        async with build_http_client(s) as client:
+            if body.source == "compal":
+                pipe = PrizeSyncPipeline(client, state.repository, body.winners_base_url or s.prize_winners_base_url, body.power_history_url or s.prize_power_history_url)
+                report = (await pipe.run(spec)).to_dict()
+            else:
+                report = (
+                    await sync_canonical_prizes(
+                        client, state.repository, spec, source=body.source, canonical_base_url=s.canonical_base_url,
+                        vietlott_base_url=s.vietlott_base_url, last=body.last, bootstrap_cookie=s.vietlott_cookie_bootstrap,
+                        nhanaz_base_url=s.nhanaz_base_url, nhanaz_dir=s.nhanaz_dir, v130_dir=s.v130_dir,
+                    )
+                ).to_dict()
     state.invalidate(spec)
     return report
 

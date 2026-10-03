@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 60
     env:
       VQE_LOG_LEVEL: WARNING
+      VQE_SEED_FILE_DIR: data/seed
+      VQE_AUTO_UPDATE_DIR: data/results
       PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v7
@@ -38,7 +40,7 @@ jobs:
 
       # Kho kết quả, kỳ đã đồng bộ và trạng thái bộ dự báo được giữ giữa các lần chạy bằng cache.
       # Mất cache cũng không sao: bước sau dựng lại từ dữ liệu đi kèm + nguồn, và bộ dự báo học lại
-      # cho đúng kết quả cũ (học tăng dần = học một lần). Chỉ sổ dự báo nằm trong repo.
+      # cho đúng kết quả cũ (học tăng dần = học một lần). Sổ dự báo và journal kết quả nằm trong repo.
       - name: Khôi phục trạng thái
         uses: actions/cache/restore@v6
         with:
@@ -47,11 +49,15 @@ jobs:
             data/parquet
             data/products
             data/forecast/*.json
+            data/results/status.json
           key: vqe-state-${{ github.run_id }}
           restore-keys: vqe-state-
 
       - name: Nạp dữ liệu đi kèm (không làm gì nếu đã có)
         run: vietlott init --skip-forecast --offline
+
+      - name: Phục hồi kết quả đã lưu và đồng bộ đến hạn
+        run: vlm-update --once > results-status.json || echo "::warning::nguồn kết quả chưa sẵn sàng — giữ dữ liệu đã phục hồi"
 
       - name: Đồng bộ (vietlott.vn → kho cộng đồng → bản sao GitHub)
         run: |
@@ -64,11 +70,12 @@ jobs:
 
       - name: Ghi sổ dự báo vào repo
         run: |
-          if [ -n "$(git status --porcelain -- data/forecast/ledger.jsonl)" ]; then
+          if [ -n "$(git status --porcelain -- data/forecast/ledger.jsonl data/results/results.jsonl)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/forecast/ledger.jsonl
-            git commit -m "data: sổ dự báo $(TZ=Asia/Ho_Chi_Minh date +%F' '%H:%M) [skip ci]"
+            if [ -f data/results/results.jsonl ]; then git add data/results/results.jsonl; fi
+            git commit -m "data: kết quả và sổ dự báo $(TZ=Asia/Ho_Chi_Minh date +%F' '%H:%M) [skip ci]"
             ok=0
             for i in 1 2 3; do
               if git pull --rebase --autostash && git push; then ok=1; break; fi
@@ -92,6 +99,7 @@ jobs:
             data/parquet
             data/products
             data/forecast/*.json
+            data/results/status.json
           key: vqe-state-${{ github.run_id }}
 
       - uses: actions/configure-pages@v6

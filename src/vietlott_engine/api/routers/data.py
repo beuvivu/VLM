@@ -7,9 +7,14 @@ from fastapi import APIRouter, Depends, Query
 from vietlott_engine.api.deps import AppState, get_state, resolve_game
 from vietlott_engine.api.schemas import SyncRequest
 from vietlott_engine.core.games import GAMES, GameSpec
-from vietlott_engine.crawler.pipeline import SyncPipeline, build_http_client, build_source
 
 router = APIRouter()
+
+
+@router.get('/updates/status', tags=['system'])
+async def updates_status(state: AppState = Depends(get_state)) -> dict:
+    from vlm.updates.service import update_status
+    return update_status(state)
 
 
 @router.get("/health", tags=["system"])
@@ -56,8 +61,5 @@ def get_draws(spec: GameSpec = Depends(resolve_game), limit: int = Query(20, ge=
 @router.post("/games/{game}/sync", tags=["data"])
 async def sync(body: SyncRequest | None = None, spec: GameSpec = Depends(resolve_game), state: AppState = Depends(get_state)) -> dict:
     body = body or SyncRequest()
-    async with build_http_client(state.settings) as client:
-        source = build_source(state.settings, client, body.source)
-        report = await SyncPipeline(source, state.repository).run(spec, full_refresh=body.full_refresh)
-    state.invalidate(spec)
-    return report.to_dict()
+    from vlm.updates.service import sync_matrix
+    return await sync_matrix(state, spec, source=body.source, full_refresh=body.full_refresh)

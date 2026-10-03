@@ -63,6 +63,10 @@ class Settings(BaseSettings):
     max_backtest_strategies: int = 8
     max_backtest_tickets: int = 50
     sync_on_startup: bool = False
+    auto_update_enabled: bool = True
+    auto_update_timeout_s: float = Field(default=180, gt=0)
+    auto_update_dir: Path | None = None
+    source_timeout_s: float = Field(default=20, gt=0)
     storage_backend: Literal["duckdb", "memory"] = "duckdb"
     seed_file_dir: Path | None = None  # optional offline JSONL dir loaded on startup when the store is empty
     log_level: str = "INFO"

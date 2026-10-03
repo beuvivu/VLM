@@ -4,7 +4,7 @@ The k-of-n games (Mega 6/45, Power 6/55, Lotto 5/35) live in ``core.games`` /
 ``core.history``. The other products draw differently and are stored here as compact
 NumPy histories:
 
-* Keno       — 20 different numbers from 1–80 every ~10 minutes (06:00–21:5x).
+* Keno       — 20 different numbers from 1–80; current published cadence ~8 minutes.
 * Bingo18    — three independent numbers 1–6 ("dice") every ~6 minutes.
 * Max 3D     — 20 three-digit numbers 000–999 in groups 2 / 4 / 6 / 8 (Max 3D+ uses the
   same results); Max 3D Pro — the same layout, its own draw.
@@ -19,6 +19,8 @@ from __future__ import annotations
 
 import gzip
 import json
+import os
+import tempfile
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
@@ -52,7 +54,7 @@ PRODUCT_INFO: dict[ProductCode, ProductInfo] = {
     ProductCode.MEGA_645: ProductInfo(ProductCode.MEGA_645, "Mega 6/45", "6 số từ 1–45", "18:00 Thứ 4, 6, CN", "/vi/trung-thuong/ket-qua-trung-thuong/645", True),
     ProductCode.POWER_655: ProductInfo(ProductCode.POWER_655, "Power 6/55", "6 số + 1 số phụ từ 1–55", "18:00 Thứ 3, 5, 7", "/vi/trung-thuong/ket-qua-trung-thuong/655", True),
     ProductCode.LOTTO_535: ProductInfo(ProductCode.LOTTO_535, "Lotto 5/35", "5 số từ 1–35 + 1 số đặc biệt 1–12", "13:00 và 21:00 hằng ngày", "/vi/trung-thuong/ket-qua-trung-thuong/535", True),
-    ProductCode.KENO: ProductInfo(ProductCode.KENO, "Keno", "20 số khác nhau từ 1–80", "~10 phút/kỳ, 06:00–21:5x hằng ngày", "/vi/trung-thuong/ket-qua-trung-thuong/winning-number-keno", False),
+    ProductCode.KENO: ProductInfo(ProductCode.KENO, "Keno", "20 số khác nhau từ 1–80", "~8 phút/kỳ, 06:00–21:5x hằng ngày", "/vi/trung-thuong/ket-qua-trung-thuong/winning-number-keno", False),
     ProductCode.BINGO18: ProductInfo(ProductCode.BINGO18, "Bingo18", "3 số độc lập từ 1–6", "~6 phút/kỳ, 06:00–21:5x hằng ngày", "/vi/trung-thuong/ket-qua-trung-thuong/winning-number-bingo18", False),
     ProductCode.MAX3D: ProductInfo(ProductCode.MAX3D, "Max 3D / Max 3D+", "20 số 000–999 (2 + 4 + 6 + 8)", "18:00 Thứ 2, 4, 6", "/vi/trung-thuong/ket-qua-trung-thuong/max-3D", False),
     ProductCode.MAX3D_PRO: ProductInfo(ProductCode.MAX3D_PRO, "Max 3D Pro", "20 số 000–999 (2 + 4 + 6 + 8)", "18:00 Thứ 3, 5, 7", "/vi/trung-thuong/ket-qua-trung-thuong/max-3DPro", False),
@@ -171,13 +173,24 @@ def read_jsonl(path: Path) -> list[dict]:
 
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:
+    """Replace a complete history atomically; a failed write preserves the old file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     text = "\n".join(json.dumps(r, ensure_ascii=False, separators=(",", ":")) for r in rows) + "\n"
-    if str(path).endswith(".gz"):
-        with gzip.open(path, "wt", encoding="utf-8", compresslevel=9) as fh:
-            fh.write(text)
-    else:
-        path.write_text(text, encoding="utf-8")
+    name = None
+    try:
+        with tempfile.NamedTemporaryFile('wb', dir=path.parent, suffix='.tmp', delete=False) as fh:
+            name = fh.name
+            if str(path).endswith('.gz'):
+                with gzip.GzipFile(fileobj=fh, mode='wb', compresslevel=9, mtime=0) as compressed:
+                    compressed.write(text.encode('utf-8'))
+            else:
+                fh.write(text.encode('utf-8'))
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(name, path)
+    finally:
+        if name and os.path.exists(name):
+            os.unlink(name)
 
 
 def history_to_rows(h: ProductHistory) -> list[dict]:

@@ -2,6 +2,8 @@
 
 Hệ thống phân tích định lượng cho **toàn bộ sản phẩm** xổ số tự chọn Vietlott — **Mega 6/45**, **Power 6/55**, **Lotto 5/35**, **Keno**, **Bingo18**, **Max 3D / 3D+**, **Max 3D Pro** và lưu trữ **Max 4D**: thu thập dữ liệu bất đồng bộ, bộ kiểm định ngẫu nhiên, mô hình Bayesian/Markov, mạng đồ thị (GCN), lý thuyết trò chơi chống trùng số (Anti-Popularity EV), bao lô tối ưu (covering design) và backtest walk-forward — kèm FastAPI, CLI, Docker.
 
+**Rà soát VLM 03/10/2026:** [Audit Matrix và kết quả kiểm đếm](reports/VLM_AUDIT_2026-10-03.md), [vận hành crawler, cào bù và đối soát vé](docs/VLM_INTEGRITY.md). API `vlm` nằm trong `src/vlm/`; dữ liệu hiện còn thiếu 384 kỳ Keno và 83.654 kỳ Bingo18, nên chưa chứng nhận lịch sử đầy đủ đến hiện tại.
+
 > **Cài đặt nhanh** (chi tiết: [docs/INSTALL.md](docs/INSTALL.md))
 > - **Windows:** giải nén, bấm đúp `install.cmd` (chưa có Python: `install.cmd -InstallPython`). Sau đó, trong thư mục này: `vietlott forecast next` (Command Prompt) hoặc `.\vietlott.cmd forecast next` (PowerShell).
 > - **Linux / macOS:** `bash install.sh`, rồi `./vietlott forecast next`.

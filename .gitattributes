@@ -5,3 +5,4 @@
 *.gz binary
 *.duckdb binary
 *.parquet binary
+reports/vlm/missing_draws.json linguist-generated=true

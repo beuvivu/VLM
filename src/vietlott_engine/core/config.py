@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     parquet_subdir: str = "parquet"
 
     # --- crawler
+    http_backend: Literal["httpx", "curl_cffi"] = "httpx"
     source: Literal["github_mirror", "vietlott", "file", "nhanaz", "v130", "auto"] = "github_mirror"
     github_mirror_base_url: str = "https://raw.githubusercontent.com/vietvudanh/vietlott-data/main/data"
     prize_winners_base_url: str = "https://raw.githubusercontent.com/Compal123/vietlot-ai/main/data"

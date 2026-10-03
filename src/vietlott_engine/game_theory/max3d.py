@@ -200,19 +200,19 @@ def bao_plays(prod: Max3DProduct, kind: str, numbers: list[str | int]) -> list[P
 
 # ------------------------------------------------------------------ exact single play
 def _group_states(n: int, same: bool) -> list[tuple[int, int, float]]:
-    """(count of x capped at 2, count of y capped at 2, probability) for n independent draws."""
+    """Full occurrence counts and their probabilities for n independent draws."""
     p = P_NUM
     out: dict[tuple[int, int], float] = {}
     if same:
         for a in range(n + 1):
             pr = factorial(n) / (factorial(a) * factorial(n - a)) * p**a * (1 - p) ** (n - a)
-            key = (min(a, 2), min(a, 2))
+            key = (a, a)
             out[key] = out.get(key, 0.0) + pr
     else:
         for a in range(n + 1):
             for b in range(n + 1 - a):
                 pr = factorial(n) / (factorial(a) * factorial(b) * factorial(n - a - b)) * p ** (a + b) * (1 - 2 * p) ** (n - a - b)
-                key = (min(a, 2), min(b, 2))
+                key = (a, b)
                 out[key] = out.get(key, 0.0) + pr
     return [(a, b, pr) for (a, b), pr in out.items()]
 
@@ -238,6 +238,21 @@ def _tier_won(t: Max3DTier, d: tuple[str, str], cx: dict[str, int], cy: dict[str
     if t.condition == "pair_exact":
         return d == ("x", "x") if same else d in (("x", "y"), ("y", "x"))
     raise ValueError(t.condition)
+
+
+def _tier_awards(prod: Max3DProduct, t: Max3DTier, d: tuple[str, str], cx: dict[str, int],
+                 cy: dict[str, int], single: bool, same: bool) -> int:
+    """Quantity won: each matching constituent number pays its single-number tier."""
+    if not _tier_won(t, d, cx, cy, single, same):
+        return 0
+    if t.condition != "one":
+        return 1
+    awards = sum(cx[g] for g in t.groups)
+    if not single and not same:
+        awards += sum(cy[g] for g in t.groups)
+    elif not single and prod.identical_pair_multiplier == 1:
+        awards *= 2
+    return awards
 
 
 class PlayDistribution(BaseModel):
@@ -272,8 +287,9 @@ def play_distribution(prod: Max3DProduct, play: Play | list[int | str], stake_mu
                     cy = {"D": cyd, "G1": b1, "G2": b2, "G3": b3}
                     pay = 0.0
                     for t in prod.tiers:
-                        if _tier_won(t, d, cx, cy, single, same):
-                            pay += t.value * mult
+                        awards = _tier_awards(prod, t, d, cx, cy, single, same)
+                        if awards:
+                            pay += t.value * mult * awards
                             tier_p[t.name] += pr
                     dist[pay] = dist.get(pay, 0.0) + pr
     p_any = float(sum(p for v, p in dist.items() if v > 0))
@@ -350,11 +366,12 @@ def simulate_plays(prod: Max3DProduct, plays: list[Play], sims: int = 200_000, s
         total = np.zeros(c)
         for t in prod.tiers:
             if t.condition == "one":
-                hit = np.zeros((c, len(plays)), bool)
-                for g in t.groups:
-                    hit |= cx[g] > 0
-                    if not single:
-                        hit |= cy[g] > 0
+                hit = sum(cx[g] for g in t.groups).astype(np.int64)
+                if not single:
+                    additional = sum(cy[g] for g in t.groups)
+                    # Max 3D+ already doubles identical selections through mult.
+                    additional = np.where(same[None, :] & (prod.identical_pair_multiplier == 2), 0, additional)
+                    hit += additional
             elif t.condition == "both":
                 tx = sum(cx[g] for g in t.groups)
                 ty = sum(cy[g] for g in t.groups)
@@ -459,4 +476,3 @@ def product_summary(prod: Max3DProduct) -> ProductSummary:
         p_any_prize=d.p_any_prize,
         top_prize_odds=1 / d.tier_probabilities[prod.tiers[0].name],
     )
-

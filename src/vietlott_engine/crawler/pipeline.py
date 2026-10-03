@@ -109,6 +109,17 @@ class SyncPipeline:
 
 
 def build_http_client(settings: Settings) -> AsyncHttpClient:
+    if settings.http_backend == "curl_cffi":
+        import os
+        from dataclasses import replace
+        from vlm.crawler.async_scraper import AsyncScraper, ScraperConfig, FlareSolverrSolver
+
+        config = replace(ScraperConfig.from_env(), timeout_s=settings.http_timeout_s,
+                         rate_per_s=settings.rate_limit_per_s, max_concurrency=settings.max_concurrency,
+                         max_retries=settings.max_retries)
+        endpoint = os.getenv("VLM_FLARESOLVERR_URL")
+        solver = FlareSolverrSolver(endpoint) if endpoint else None
+        return AsyncScraper(config, solver=solver)  # type: ignore[return-value]
     return AsyncHttpClient(
         timeout=settings.http_timeout_s,
         rate_limit_per_s=settings.rate_limit_per_s,

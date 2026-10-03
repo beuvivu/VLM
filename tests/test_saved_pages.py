@@ -73,7 +73,8 @@ def test_cloudflare_challenge_is_detected_and_not_retried() -> None:
 
 # ------------------------------------------------------------------ saved pages
 def test_import_pages_all_formats(tmp_path: Path) -> None:
-    (tmp_path / "mega.mhtml").write_text(_mhtml(MEGA_URL, DETAIL_645), encoding="ascii")
+    # MHTML already has CRLF; text-mode Windows output would turn it into CRCRLF.
+    (tmp_path / "mega.mhtml").write_bytes(_mhtml(MEGA_URL, DETAIL_645).encode("ascii"))
     (tmp_path / "keno_list.har").write_text(_har([(KENO_AJAX, json.dumps({"value": {"HtmlContent": _keno_html([("01/10/2026", 297700, list(range(1, 21)))])}}), {"GameId": "6", "PageIndex": 1})]), encoding="utf-8")
     nums = [3, 7, 11, 15, 19, 22, 26, 30, 33, 38, 41, 44, 47, 52, 56, 60, 63, 69, 72, 80]
     (tmp_path / "keno_detail.html").write_text("<!-- saved from url=(0090)https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong/view-detail-keno-result?id=0297701 -->\n" + keno_detail_html(297701, nums), encoding="utf-8")
@@ -127,7 +128,7 @@ def test_compare_with_data_and_cli_import(tmp_path: Path, monkeypatch: pytest.Mo
     assert 0.9 < cmp["mismatch_rate_upper95"] <= 1.0
 
     repo = InMemoryRepository()
-    (pages / "mega.mhtml").write_text(_mhtml(MEGA_URL, DETAIL_645), encoding="ascii")
+    (pages / "mega.mhtml").write_bytes(_mhtml(MEGA_URL, DETAIL_645).encode("ascii"))
     m = compare_matrix(import_pages(pages), repo)["mega645"]
     assert m["new_draws"] == [1569] and m["prize_tables"] == 1
 

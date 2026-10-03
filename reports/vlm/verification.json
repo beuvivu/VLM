@@ -6,8 +6,8 @@
     "errors": 0,
     "skipped": 1,
     "passed": 262,
-    "command": "python -m pytest -ra",
-    "seconds": 103.602
+    "command": "python -m pytest -ra --junitxml=vlm-closure.xml",
+    "seconds": 106.359
   },
   "ruff": {
     "command": "ruff check --select F,B023 src scripts tests",
@@ -52,5 +52,15 @@
     "passed": 6,
     "skipped": 1,
     "failures": 0
+  },
+  "ci_regression_fixes": {
+    "mhtml": "Write CRLF MHTML fixtures as bytes to prevent Windows CRCRLF translation",
+    "dotenv": "Session-scoped isolation precedes module-scoped API clients",
+    "reproduction": "3 API failures reproduced with installer-style .env; translated MHTML fixture yielded no document",
+    "focused_verification": {
+      "passed": 9,
+      "failures": 0,
+      "environment": "Temporary working directory with installer-style seed .env"
+    }
   }
 }

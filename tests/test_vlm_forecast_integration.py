@@ -198,20 +198,27 @@ def test_ml_event_ledger_recovers_a_crash_tail_and_preserves_first_issue(tmp_pat
 
 
 def test_slow_learning_has_separate_budget_and_preserves_successful_result_status(tmp_path, monkeypatch):
+    from contextlib import asynccontextmanager
     from datetime import datetime
     from vlm.updates.service import journal_path, make_runner
     from vietlott_engine.crawler.product_store import ProductSyncPipeline
     settings = Settings(data_dir=tmp_path, product_seed_dir=tmp_path/'empty',
-                        ml_auto_update_enabled=True, auto_update_timeout_s=.2,
+                        ml_auto_update_enabled=True, auto_update_timeout_s=5,
                         fallback_order=['mirror']).model_copy(update={'ml_learning_timeout_s':.02})
     state = AppState(settings, InMemoryRepository())
     async def fetch(*args, **kwargs):
         return [{'id':1, 'date':'2026-10-03', 'result':[1, 2, 3]}]
     monkeypatch.setattr(ProductSyncPipeline, 'fetch', fetch)
+    @asynccontextmanager
+    async def offline_client(settings):
+        yield None  # fetch is stubbed; constructing a real TLS client is unrelated
+    monkeypatch.setattr('vlm.updates.service.build_http_client', offline_client)
     async def run():
         release = asyncio.Event()
         completed = []
+        source_status_at_learning_start = []
         async def slow_model(*args):
+            source_status_at_learning_start.append(json.loads(runner.path.read_text())['products']['bingo18'])
             await release.wait()
             completed.append(True)
             return {'enabled':True, 'learned_draws':1, 'error':None}
@@ -222,6 +229,10 @@ def test_slow_learning_has_separate_budget_and_preserves_successful_result_statu
         result = (await runner.tick())['products']['bingo18']
         assert result['error'] is None and result['last_draw_id'] == 1
         assert result['learning']['error'] == 'TimeoutError'
+        # Source success must already be durable while the model is still blocked.
+        saved = source_status_at_learning_start[0]
+        assert saved['last_draw_id'] == 1 and saved['error'] is None and saved['last_success']
+        assert not completed
         assert json.loads(journal_path(state).read_text())['draw_id'] == 1
         release.set()
         from vlm.updates.service import finish_learning

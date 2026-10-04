@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the static site published to GitHub Pages: ``site/index.html`` plus machine-readable JSON.
+"""Build the static site published to GitHub Pages: ``site/index.html`` (results) and ``forecast.html`` (analysis) plus JSON.
 
     python scripts/build_site.py [--out site] [--dir data/forecast]
 
@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from vietlott_engine import __version__  # noqa: E402
+from vlm.web.dashboard import build_dashboard  # noqa: E402
 from vietlott_engine.core.products import PRODUCT_INFO, ProductCode  # noqa: E402
 from vietlott_engine.forecast.engine import LEDGER, Forecaster, scoreboard, state_path, vn, vn_int  # noqa: E402
 
@@ -118,36 +119,17 @@ def product_section(rep: dict, path: list[list[float]], board: dict | None) -> s
     return "\n".join(parts)
 
 
-CSS = """
-:root{color-scheme:light dark;--bg:#f7f7f5;--card:#fff;--ink:#1d1d1f;--muted:#5f6368;--line:#d9d9d6;--accent:#0b6bcb;--ok:#0a7a3d;--no:#6b6b6b;--warn:#a15c00}
-@media (prefers-color-scheme:dark){:root{--bg:#121314;--card:#1c1d1f;--ink:#ececec;--muted:#a3a7ad;--line:#33363a;--accent:#6aa9ff;--ok:#4cc38a;--no:#9a9a9a;--warn:#f0b35a}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
-main{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
-h1{font-size:1.6rem;margin:0 0 4px}h2{font-size:1.2rem;margin:0}h3{font-size:1rem;margin:18px 0 6px}
-a{color:var(--accent)}
-.lede{max-width:70ch}.muted,.meta{color:var(--muted);font-size:.92rem}
-.note{border-left:4px solid var(--warn);background:var(--card);padding:10px 14px;margin:16px 0;max-width:80ch}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:18px 0}
-.card>header{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.badge{font-size:.8rem;padding:2px 10px;border-radius:999px;border:1px solid currentColor}
-.badge.ok{color:var(--ok)}.badge.no{color:var(--no)}
-.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px}
-table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.93rem;font-variant-numeric:tabular-nums}
-caption{text-align:left;color:var(--muted);font-size:.88rem;padding-bottom:4px}
-th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-thead th{font-weight:600}
-.table-wrap{overflow-x:auto}
-.spark{width:100%;max-width:420px;height:auto}
-.spark .line{fill:none;stroke:var(--no);stroke-width:1.6}.spark .line.hit{stroke:var(--ok)}
-.spark .thr{stroke:var(--warn);stroke-dasharray:4 3}.spark .zero{stroke:var(--line)}
-.spark .thr-label{fill:var(--warn);font-size:10px;text-anchor:end}
-footer{color:var(--muted);font-size:.88rem;margin-top:32px}
-"""
 
-
-def build(out: Path, directory: Path) -> dict:
+def build(out: Path, directory: Path, *, data_dir: Path | None = None, seed_dir: Path | None = None, journal: Path | None = None) -> dict:
+    from vietlott_engine.core.config import get_settings
+    settings = get_settings()
+    data_dir = data_dir or settings.data_dir
+    seed_dir = seed_dir or settings.product_seed_dir
+    journal = journal or (settings.auto_update_dir / 'results.jsonl' if settings.auto_update_dir else data_dir / 'results' / 'results.jsonl')
+    dashboard = build_dashboard(data_dir, seed_dir, directory, journal)
     out.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(ROOT / 'scripts' / 'site_assets', out / 'assets', dirs_exist_ok=True)
+    (out / 'assets' / 'index.html').unlink(missing_ok=True)
     (out / "data" / "forecast").mkdir(parents=True, exist_ok=True)
     boards = {r["product"]: r for r in scoreboard(directory)}
     summary, sections = [], []
@@ -169,7 +151,7 @@ def build(out: Path, directory: Path) -> dict:
         })
         sections.append(product_section(rep, path, boards.get(code.value)))
     generated = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    meta = {"generated_at": generated, "version": __version__, "products": summary}
+    meta = {"generated_at": generated, "version": __version__, "products": summary, "dashboard": dashboard["stats"]}
     (out / "data" / "summary.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
     (out / "data" / "scoreboard.json").write_text(json.dumps(list(boards.values()), ensure_ascii=False, indent=1), encoding="utf-8")
     ledger = directory / LEDGER
@@ -189,13 +171,16 @@ def build(out: Path, directory: Path) -> dict:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vietlott Quant Engine</title>
+<title>VLM · Phân tích & tính toán dự báo</title>
 <meta name="description" content="Dự báo tự học có kiểm chứng cho 8 sản phẩm Vietlott: xác suất kỳ tới, chỉ số bằng chứng e-value và sổ dự báo ghi trước kỳ quay.">
-<style>{CSS}</style>
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-<main>
-<h1>Vietlott Quant Engine</h1>
+<header class="site-header"><div class="nav-inner"><a class="brand" href="index.html"><span class="brand-mark">V</span><span>VLM<small>VIETLOTT MASTER</small></span></a><nav aria-label="Điều hướng"><a class="nav-link" href="index.html">Kết quả & đối chiếu</a><a class="nav-link active" href="forecast.html">Phân tích</a></nav><button class="icon-button theme-toggle" type="button" aria-label="Chuyển giao diện tối">◐</button></div></header>
+<main class="analysis-main">
+<a class="text-link" href="index.html">← Trang kết quả, dự báo & đối chiếu</a>
+<h1>Phân tích & tính toán dự báo</h1>
 <p class="lede">Dự báo tự học cho 8 sản phẩm Vietlott, kèm phép đo cho biết mô hình có thật sự hơn ngẫu nhiên không.</p>
 <p class="note">Nếu máy quay công bằng, không ai dự đoán được kết quả với xác suất cao. Mô hình ở đây học sau mỗi kỳ và tự đo bằng
 <strong>e-value</strong> (hợp lệ ở mọi thời điểm): chỉ khi vượt 20 mới là bằng chứng. Ngay cả khi có bằng chứng, mọi cửa vẫn có kỳ vọng âm.
@@ -214,7 +199,11 @@ def build(out: Path, directory: Path) -> dict:
 </body>
 </html>
 """
-    (out / "index.html").write_text(page, encoding="utf-8")
+    (out / "forecast.html").write_text(page, encoding="utf-8")
+    serialized = json.dumps(dashboard, ensure_ascii=False, allow_nan=False)
+    (out / 'data' / 'dashboard.json').write_text(serialized, encoding='utf-8')
+    homepage = (ROOT / 'scripts' / 'site_assets' / 'index.html').read_text(encoding='utf-8')
+    (out / 'index.html').write_text(homepage.replace('__DASHBOARD_JSON__', serialized.replace('<', '\\u003c')), encoding='utf-8')
     return meta
 
 
@@ -232,8 +221,8 @@ def main() -> int:
         s = get_settings()
         a.dir = str(s.forecast_dir or s.data_dir / "forecast")
     meta = build(Path(a.out), Path(a.dir))
-    print(f"{len(meta['products'])} sản phẩm → {Path(a.out) / 'index.html'}")
-    return 0 if meta["products"] else 1
+    print(f"{meta['dashboard']['results']} sản phẩm có kết quả → {Path(a.out) / 'index.html'}; phân tích → forecast.html")
+    return 0 if meta["dashboard"]["results"] else 1
 
 
 if __name__ == "__main__":

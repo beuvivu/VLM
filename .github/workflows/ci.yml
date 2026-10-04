@@ -59,3 +59,37 @@ jobs:
           cache-dependency-path: pyproject.toml
       - run: python -m pip install -e ".[dev,ml]"
       - run: python -m pytest tests/test_vlm_forecast_models.py tests/test_vlm_forecast_pipeline.py -q
+
+  website:
+    name: Website (desktop, mobile, light/dark)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VQE_AUTO_UPDATE_DIR: data/results
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - run: python -m pip install -e .
+      - name: Dựng hai trang từ seed và sổ dự báo thật
+        run: python scripts/build_site.py --out site
+      - name: Cài trình duyệt kiểm thử
+        run: |
+          npm install --prefix /tmp/vlm-ui playwright@1.62.1 @axe-core/playwright
+          /tmp/vlm-ui/node_modules/.bin/playwright install --with-deps chromium
+      - name: Kiểm tra hành vi và chụp desktop / mobile
+        run: |
+          python -m http.server 8765 --directory site > /tmp/vlm-site-http.log 2>&1 &
+          NODE_PATH=/tmp/vlm-ui/node_modules node scripts/check_site.cjs
+      - name: Ảnh kiểm tra giao diện
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: vlm-ui-screenshots
+          path: ui-artifacts
+          retention-days: 14

@@ -80,7 +80,15 @@
     const r = p.latest, jackpot = r.prizes.find(t=>t.pool && t.value_vnd!=null);
     return `<div class="hero-panel-top"><span class="pill">${jackpot?'JACKPOT MỚI NHẤT':'THEO DÕI KỲ QUAY'}</span><span class="orbit-icon" aria-hidden="true">✦</span></div><p class="hero-game">${esc(short[p.product])} · kỳ ${did(r.draw_id)}</p><p class="jackpot-amount">${jackpot?`${number(jackpot.value_vnd)} <small>đ</small>`:'Kết quả đã về.'}</p><p class="scope-note">${jackpot?`${esc(jackpot.label)} · quỹ giải của kỳ ${time(r.draw_date,true)}`:'Bảng Jackpot của kỳ mới đang chờ cập nhật.'}</p>${p.product.startsWith('max')?balls(r.numbers.slice(0,2),[],{digit:true}):balls(r.numbers.slice(0,6))}<div class="hero-panel-bottom"><span>Nguồn: ${esc(r.source)}</span><a id="hero-results" href="#results">Xem đầy đủ các giải ↗</a></div>`;
   }
+  function rememberDetails() {
+    // toggle events are queued; read the live state before replacing any cards.
+    document.querySelectorAll('.card-details').forEach(detail=>{
+      const key=detail.dataset.detail;
+      detail.open?expanded.add(key):expanded.delete(key);
+    });
+  }
   function renderContent() {
+    rememberDetails();
     const current = visible();
     $('results-grid').classList.toggle('filtered',selected!=='all');
     $('predictions-grid').classList.toggle('filtered',selected!=='all');
@@ -95,6 +103,7 @@
   }
   function renderComparisons() { $('comparisons-list').innerHTML=comparisonsMarkup(); }
   function renderSnapshot(next=snapshot) {
+    rememberDetails();
     const choice=next.products.some(p=>p.product===selected)?selected:'all';
     // Prepare every section before replacing the last good data or any live DOM.
     const current=visible(next,choice);
@@ -151,15 +160,12 @@
   });
   $('results-grid').addEventListener('change',event=>{
     if (!event.target.matches('.draw-select')) return;
+    rememberDetails();
     draws.set(event.target.dataset.product,Number(event.target.value));
     const focus=event.target.id;
     $('results-grid').innerHTML=visible().map(resultCard).join('');
     $(focus)?.focus({preventScroll:true});
   });
-  $('results-grid').addEventListener('toggle',event=>{
-    const key=event.target.dataset.detail;
-    if (key) event.target.open?expanded.add(key):expanded.delete(key);
-  },true);
   $('comparison-status').addEventListener('change',renderComparisons);
   async function refresh(manual=false) {
     if (busy || (!manual && document.hidden)) return;

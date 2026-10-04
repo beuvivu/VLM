@@ -48,6 +48,7 @@ const base = process.env.VLM_SITE_URL || 'http://127.0.0.1:8765';
     assert(options.length>1);
     await selector.selectOption({index:1});
     const selectedId=await selector.inputValue();
+    assert(await detail.getAttribute('open')!==null,'opened catalogue survives draw selection');
     snap.generated_at=new Date(Date.parse(snap.generated_at)+60000).toISOString();
     for (const kind of ['products','warnings','timestamp']) {
       const bad=JSON.parse(JSON.stringify(snap));

@@ -208,3 +208,47 @@ def test_missing_target_stays_pending_when_a_later_draw_arrives(tmp_path):
     comparisons=snap['products'][0]['comparisons']
     assert len(comparisons)==1
     assert (comparisons[0]['target_id'],comparisons[0]['status'])==(2,'pending')
+
+
+def test_older_mirror_journal_preserves_same_draw_official_finance(tmp_path):
+    from vietlott_engine.core.models import Draw
+    from vietlott_engine.crawler.storage import DuckDBRepository
+    from vlm.web.dashboard import build_dashboard
+    data=tmp_path/'data'; repo=DuckDBRepository(data/'vietlott.duckdb')
+    repo.upsert([Draw(game='mega645',draw_id=1,draw_date='2026-10-02',numbers=(1,2,3,4,5,6),
+                      jackpot1_value=123456789,source='vietlott.vn')]); repo.close()
+    row=DrawRecord.from_legacy('mega645',{'id':1,'date':'2026-10-02','result':[1,2,3,4,5,6],'source':'mirror'})
+    journal=data/'results'/'results.jsonl';journal.parent.mkdir(parents=True);journal.write_text(row.model_dump_json()+'\n')
+    result=build_dashboard(data,tmp_path/'seed',tmp_path/'forecasts')['products'][0]['latest']
+    assert result['prizes'][0]['value_vnd']==123456789
+    assert result['source']=='vietlott.vn'
+
+
+def test_partial_prize_record_keeps_known_same_draw_jackpot(tmp_path):
+    from vlm.web.dashboard import build_dashboard
+    seed=tmp_path/'seed'
+    write_rows(seed/'power645.jsonl',[{'id':1,'date':'2026-10-02','result':[1,2,3,4,5,6],
+                                    'jackpot1_value':123456789,'source':'vietlott.vn'}])
+    write_rows(seed/'prizes_mega645.jsonl',[{'game':'mega645','draw_id':1,'draw_date':'2026-10-02',
+                  'winners':{'jackpot1':0,'first':3},'jackpot_pots':None,'source':'vietlott.vn'}])
+    result=build_dashboard(tmp_path/'data',seed,tmp_path/'forecasts')['products'][0]['latest']
+    assert result['prizes'][0]['value_vnd']==123456789
+    assert result['prizes'][0]['winners']==0
+
+
+def test_conflicting_same_draw_observations_are_reported(tmp_path):
+    from vlm.web.dashboard import build_dashboard
+    seed,data=tmp_path/'seed',tmp_path/'data'
+    write_rows(seed/'power645.jsonl',[{'id':1,'date':'2026-10-02','result':[1,2,3,4,5,6],'source':'vietlott.vn'}])
+    row=DrawRecord.from_legacy('mega645',{'id':1,'date':'2026-10-02','result':[7,8,9,10,11,12],'source':'mirror'})
+    journal=data/'results'/'results.jsonl';journal.parent.mkdir(parents=True);journal.write_text(row.model_dump_json()+'\n')
+    snap=build_dashboard(data,seed,tmp_path/'forecasts')
+    assert snap['products'][0]['latest']['numbers']==[1,2,3,4,5,6]
+    assert any('conflict' in message for message in snap['warnings'])
+
+
+def test_lotto_catalogue_includes_zero_to_two_main_matches():
+    from vietlott_engine.core.products import ProductCode
+    from vlm.web.dashboard import prize_catalogue
+    consolation=next(t for t in prize_catalogue(ProductCode.LOTTO_535) if t['code']=='consolation')
+    assert consolation['condition'].startswith('0–2 số chính')

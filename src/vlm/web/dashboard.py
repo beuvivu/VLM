@@ -34,6 +34,48 @@ TIER_LABELS = {'jackpot1': 'Jackpot', 'jackpot2': 'Jackpot 2', 'first': 'Giải 
 RECENT_LIMIT = 40
 
 
+def _rank(source: str) -> int:
+    return 3 if source.startswith('vietlott') else 2 if source.startswith('canonical') else 1
+
+
+def _warn(warnings: list[str], message: str) -> None:
+    if message not in warnings and len(warnings) < 20:
+        warnings.append(message)
+
+
+def _reconcile(old: DrawRecord, new: DrawRecord, warnings: list[str]) -> DrawRecord:
+    key = f'{new.game_type.value} #{new.draw_id}'
+    if (old.draw_date.date(), old.winning_numbers, old.bonus_number) != (new.draw_date.date(), new.winning_numbers, new.bonus_number):
+        _warn(warnings, f'result_conflict: {key}; nguồn {old.source} / {new.source}')
+        return new if _rank(new.source) >= _rank(old.source) else old
+    primary, secondary = (new, old) if _rank(new.source) >= _rank(old.source) else (old, new)
+    values = primary.model_dump()
+    sub = {**(secondary.sub_prizes_json or {}), **(primary.sub_prizes_json or {})}
+    sources = {**(secondary.sub_prizes_json or {}).get('field_sources', {}), **(primary.sub_prizes_json or {}).get('field_sources', {})}
+    for field in ('jackpot1_value', 'jackpot2_value', 'jackpot1_winners', 'jackpot2_winners'):
+        a, b = getattr(primary, field), getattr(secondary, field)
+        if a is not None and b is not None and a != b:
+            _warn(warnings, f'finance_conflict: {key} {field}')
+        chosen = primary if a is not None else secondary
+        values[field] = getattr(chosen, field)
+        if values[field] is not None:
+            sources[field] = (chosen.sub_prizes_json or {}).get('field_sources', {}).get(field, chosen.source)
+    winners = dict((secondary.sub_prizes_json or {}).get('winners', {}))
+    for tier, count in (primary.sub_prizes_json or {}).get('winners', {}).items():
+        if count is not None:
+            if winners.get(tier) is not None and winners[tier] != count:
+                _warn(warnings, f'finance_conflict: {key} {tier} winners')
+            winners[tier] = count
+    if winners:
+        sub['winners'] = winners
+    if sources:
+        sub['field_sources'] = sources
+    values['sub_prizes_json'] = sub or None
+    if primary.time_precision == 'day' and secondary.time_precision == 'second':
+        values['draw_date'], values['time_precision'] = secondary.draw_date, 'second'
+    return DrawRecord.model_validate(values)
+
+
 def _rows(path: Path, warnings: list[str]) -> Iterator[dict]:
     if not path.exists():
         return
@@ -190,7 +232,7 @@ def prize_catalogue(code: ProductCode) -> list[dict]:
     if code.value in GAMES:
         spec = get_game(code.value)
         return [{'label': ('Jackpot 1' if t.name == 'jackpot1' and code == ProductCode.POWER_655 else TIER_LABELS[t.name]),
-                 'condition': f'{t.main_matches} số chính' + (' + số đặc biệt/phụ' if t.bonus_required else ''),
+                 'condition': (f'{t.main_matches}–{t.main_matches_max}' if t.main_matches_max is not None else str(t.main_matches)) + ' số chính' + (' + số đặc biệt/phụ' if t.bonus_required else ''),
                  'value_vnd': t.fixed_amount, 'code': t.name} for t in spec.tiers]
     if code in (ProductCode.MAX3D, ProductCode.MAX3D_PRO):
         products = ('max3d', 'max3dplus') if code == ProductCode.MAX3D else ('max3dpro',)
@@ -208,20 +250,32 @@ def prize_catalogue(code: ProductCode) -> list[dict]:
     return [{'label': b.bet, 'condition': b.condition, 'value_text': b.payout, 'value_vnd': None} for b in bingo18_odds()]
 
 
-def _result(record: DrawRecord, finance: PrizeRecord | None) -> dict:
+def _result(record: DrawRecord, finance: PrizeRecord | None, warnings: list[str] | None = None) -> dict:
     code = record.game_type.value
     if finance is not None and finance.draw_date != record.draw_date.date():
         finance = None
     prizes = []
     if code in GAMES:
-        winners = finance.winners if finance else (record.sub_prizes_json or {}).get('winners', {})
-        pots = (finance.jackpot_pots or {}) if finance else {'jackpot1': record.jackpot1_value, 'jackpot2': record.jackpot2_value}
+        winners = dict((record.sub_prizes_json or {}).get('winners', {}))
+        pots = {'jackpot1': record.jackpot1_value, 'jackpot2': record.jackpot2_value}
+        field_sources = (record.sub_prizes_json or {}).get('field_sources', {})
+        pot_sources = {tier: field_sources.get(tier + '_value', record.source) for tier in pots}
+        if finance is not None:
+            for incoming, known, sources in ((finance.winners, winners, {}), (finance.jackpot_pots or {}, pots, pot_sources)):
+                for tier, value in incoming.items():
+                    if value is None:
+                        continue
+                    if known.get(tier) is not None and known[tier] != value and warnings is not None:
+                        _warn(warnings, f'finance_conflict: {code} #{record.draw_id} {tier}')
+                    if known.get(tier) is None or _rank(finance.source) >= _rank(sources.get(tier, record.source)):
+                        known[tier] = value
+                        sources[tier] = finance.source
         for tier in prize_catalogue(ProductCode(code)):
             count = winners.get(tier['code'])
             if count is None and tier['code'] in ('jackpot1', 'jackpot2'):
                 count = getattr(record, tier['code'] + '_winners')
             prizes.append({**tier, 'value_vnd': pots.get(tier['code']) if tier['value_vnd'] is None else tier['value_vnd'],
-                           'winners': count, 'pool': tier['value_vnd'] is None})
+                           'winners': count, 'pool': tier['value_vnd'] is None, 'source': pot_sources.get(tier['code']) if tier['value_vnd'] is None else 'catalogue'})
     elif code.startswith('max'):
         prod = MAX_PRODUCTS[code]
         for (lo, hi), label in zip(((0, 2), (2, 6), (6, 12), (12, 20)), prod.group_labels.values()):
@@ -261,7 +315,7 @@ def _load_results(data_dir: Path, seed_dir: Path, journal: Path, tracked: set[tu
                 return
             if did not in known and (code, did) not in tracked:
                 heapq.heappush(heap, did)
-            known[did] = rec
+            known[did] = _reconcile(known[did], rec, warnings) if did in known else rec
             if len(heap) > RECENT_LIMIT:
                 known.pop(heapq.heappop(heap), None)
         except (ValueError, TypeError, KeyError):
@@ -351,12 +405,12 @@ def build_dashboard(data_dir: Path, seed_dir: Path, directory: Path, journal: Pa
         known = records[code.value]
         recent = sorted(known.values(), key=lambda r: r.draw_id, reverse=True)
         latest = recent[0] if recent else None
-        draws = [_result(r, finance.get((code.value, r.draw_id))) for r in recent[:RECENT_LIMIT]]
+        draws = [_result(r, finance.get((code.value, r.draw_id)), warnings) for r in recent[:RECENT_LIMIT]]
         comparisons = []
         for (product, did), prediction in predictions.items():
             if product == code.value and did in known:
                 result = compare_prediction(prediction, known[did])
-                result['result'] = _result(known[did], finance.get((product, did)))
+                result['result'] = _result(known[did], finance.get((product, did)), warnings)
                 comparisons.append(result)
             elif product == code.value and now >= _time(prediction['target_time']) - MARGIN:
                 comparisons.append({**prediction, 'status': 'pending', 'tickets': []})

@@ -49,8 +49,6 @@ const base = process.env.VLM_SITE_URL || 'http://127.0.0.1:8765';
     await selector.selectOption({index:1});
     const selectedId=await selector.inputValue();
     snap.generated_at=new Date(Date.parse(snap.generated_at)+60000).toISOString();
-    await page.route('**/data/dashboard.json?*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(snap)}));
-    await page.unroute('**/data/dashboard.json?*');
     for (const kind of ['products','warnings','timestamp']) {
       const bad=JSON.parse(JSON.stringify(snap));
       bad.generated_at=new Date(Date.parse(snap.generated_at)+60000).toISOString();
@@ -69,7 +67,6 @@ const base = process.env.VLM_SITE_URL || 'http://127.0.0.1:8765';
     await page.locator('#refresh').click();
     await page.waitForFunction(()=>!document.getElementById('refresh').disabled);
     assert(!(await page.locator('#update-status').textContent()).includes('Chưa lấy được'),'valid refresh recovers after malformed payload');
-    await page.unroute('**/data/dashboard.json?*');
     await page.unroute('**/data/dashboard.json?*');
     snap.generated_at=new Date(Date.parse(snap.generated_at)+60000).toISOString();
     await page.route('**/data/dashboard.json?*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(snap)}));

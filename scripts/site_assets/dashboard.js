@@ -18,7 +18,7 @@
   const tiers = {jackpot1:'Jackpot',jackpot2:'Jackpot 2',first:'Giải Nhất',second:'Giải Nhì',third:'Giải Ba',fourth:'Giải Tư',fifth:'Giải Năm',consolation:'Khuyến khích'};
   const statusLabels = {matched:'Đã đối chiếu',pending:'Chờ kết quả',date_mismatch:'Cần kiểm tra ngày'};
   const safeUrl = value => { try { const u = new URL(value); return ['http:','https:'].includes(u.protocol) ? u.href : '#'; } catch { return '#'; } };
-  const visible = () => snapshot.products.filter(p => selected === 'all' || p.product === selected);
+  const visible = (data=snapshot, choice=selected) => data.products.filter(p => choice === 'all' || p.product === choice);
   function balls(nums, hits = [], {digit = false, bonus = false, keno = false, position = null} = {}) {
     return `<div class="balls${keno?' keno':''}">${nums.map((n,i) => {
       const hit = position ? position[i] : hits.includes(n);
@@ -40,7 +40,7 @@
     const r = p.draws.find(r=>r.draw_id === draws.get(p.product)) || p.latest;
     if (!r) return `<article class="result-card" data-product="${p.product}"><div class="card-header">${gameHeader(p)}</div><div class="empty-state"><h3>Chưa có kết quả</h3><p>Hệ thống sẽ hiển thị khi có dữ liệu đã xác thực.</p></div></article>`;
     const matrix = ['mega645','power655','lotto535'].includes(p.product);
-    return `<article class="result-card" data-product="${p.product}"><div class="card-header">${gameHeader(p)}<span class="pill teal">KẾT QUẢ</span></div><div class="card-body"><div class="draw-meta"><label class="sr-only" for="draw-${p.product}">Chọn kỳ ${esc(short[p.product])}</label><select class="draw-select" id="draw-${p.product}" data-product="${p.product}">${p.draws.map(d=>`<option value="${d.draw_id}"${d.draw_id===r.draw_id?' selected':''}>${did(d.draw_id)} · ${time(d.draw_date,true)}</option>`).join('')}</select><span>${r.time_precision==='day'?'Ngày quay':'Giờ VN'}<br>${time(r.draw_date,r.time_precision==='day')}</span></div>${resultNumbers(p,r)}${matrix?`<table class="prize-table"><thead><tr><th scope="col">Hạng giải</th><th scope="col" class="amount">${p.product==='lotto535'?'Giá trị / Quỹ':'Giá trị / Quỹ'}</th><th scope="col">Lượt trúng</th></tr></thead><tbody>${r.prizes.map(t=>`<tr><td>${esc(t.label)}${t.pool?' <span class="muted">(quỹ)</span>':''}</td><td class="amount">${money(t.value_vnd)}</td><td>${t.winners==null?'—':number(t.winners)}</td></tr>`).join('')}</tbody></table><p class="scope-note">“—” là chưa có dữ liệu. Jackpot là tổng quỹ của đúng kỳ này.</p>`:''}</div><details class="card-details" data-detail="prizes-${p.product}"${expanded.has(`prizes-${p.product}`)?' open':''}><summary>Cơ cấu giải ${p.product==='max3d'?'Max 3D & Max 3D+':'& cách trúng'}</summary><p class="scope-note">Mức thưởng theo lượt chơi 10.000 đ, trước thuế. Jackpot và giải có trần được chia theo quy tắc sản phẩm.</p><table class="catalogue-table"><thead><tr><th scope="col">Giải / Cửa chơi</th><th scope="col">Điều kiện</th><th scope="col">Mức thưởng</th></tr></thead><tbody>${p.prize_catalogue.map(t=>`<tr><td>${t.product?esc(t.product)+'<br>':''}${esc(t.label)}</td><td>${esc(t.condition)}${t.note?`<p class="catalogue-note">${esc(t.note)}</p>`:''}</td><td>${t.value_text?esc(t.value_text)+' đ':t.value_vnd==null?'Chia theo quỹ':money(t.value_vnd)}</td></tr>`).join('')}</tbody></table></details><div class="card-footer"><span>Nguồn: ${esc(r.source)}${r.time_precision==='day'?' · chỉ có ngày':''}</span><a class="source-link" href="${esc(safeUrl(r.official_url))}" target="_blank" rel="noopener noreferrer">Kết quả Vietlott ↗</a></div></article>`;
+    return `<article class="result-card" data-product="${p.product}"><div class="card-header">${gameHeader(p)}<span class="pill teal">KẾT QUẢ</span></div><div class="card-body"><div class="draw-meta"><label class="sr-only" for="draw-${p.product}">Chọn kỳ ${esc(short[p.product])}</label><select class="draw-select" id="draw-${p.product}" data-product="${p.product}">${p.draws.map(d=>`<option value="${d.draw_id}"${d.draw_id===r.draw_id?' selected':''}>${did(d.draw_id)} · ${time(d.draw_date,true)}</option>`).join('')}</select><span>${r.time_precision==='day'?'Ngày quay':'Giờ VN'}<br>${time(r.draw_date,r.time_precision==='day')}</span></div>${resultNumbers(p,r)}${matrix?`<table class="prize-table"><thead><tr><th scope="col">Hạng giải</th><th scope="col" class="amount">${p.product==='lotto535'?'Giá trị / Quỹ':'Giá trị / Quỹ'}</th><th scope="col">Lượt trúng</th></tr></thead><tbody>${r.prizes.map(t=>`<tr><td>${esc(t.label)}${t.pool?' <span class="muted">(quỹ)</span>':''}</td><td class="amount">${money(t.value_vnd)}${t.pool && t.value_vnd!=null && t.source && t.source!==r.source?`<span class="prize-source">Nguồn: ${esc(t.source)}</span>`:""}</td><td>${t.winners==null?'—':number(t.winners)}</td></tr>`).join('')}</tbody></table><p class="scope-note">“—” là chưa có dữ liệu. Jackpot là tổng quỹ của đúng kỳ này.${r.prize_source && r.prize_source!==r.source?` Nguồn bảng giải bổ sung: ${esc(r.prize_source)}.`:""}</p>`:''}</div><details class="card-details" data-detail="prizes-${p.product}"${expanded.has(`prizes-${p.product}`)?' open':''}><summary id="prize-summary-${p.product}">Cơ cấu giải ${p.product==='max3d'?'Max 3D & Max 3D+':'& cách trúng'}</summary><p class="scope-note">Mức thưởng theo lượt chơi 10.000 đ, trước thuế. Jackpot và giải có trần được chia theo quy tắc sản phẩm.</p><table class="catalogue-table"><thead><tr><th scope="col">Giải / Cửa chơi</th><th scope="col">Điều kiện</th><th scope="col">Mức thưởng</th></tr></thead><tbody>${p.prize_catalogue.map(t=>`<tr><td>${t.product?esc(t.product)+'<br>':''}${esc(t.label)}</td><td>${esc(t.condition)}${t.note?`<p class="catalogue-note">${esc(t.note)}</p>`:''}</td><td>${t.value_text?esc(t.value_text)+' đ':t.value_vnd==null?'Chia theo quỹ':money(t.value_vnd)}</td></tr>`).join('')}</tbody></table></details><div class="card-footer"><span>Nguồn: ${esc(r.source)}${r.time_precision==='day'?' · chỉ có ngày':''}</span><a class="source-link" id="source-${p.product}" href="${esc(safeUrl(r.official_url))}" target="_blank" rel="noopener noreferrer">Kết quả Vietlott ↗</a></div></article>`;
   }
   function componentRows(p, f) {
     return f.components.filter(c=>c.name!=='special').map(c=> {
@@ -56,7 +56,7 @@
   }
   function predictionCard(p) {
     const f = p.next_forecast;
-    return `<article class="prediction-card" data-product="${p.product}"><div class="card-header">${gameHeader(p)}<span class="pill ${f?.registered?'teal':'amber'}">${f?.registered?'ĐÃ ĐĂNG KÝ':'THAM KHẢO'}</span></div>${f?`<div class="card-body"><div class="draw-meta"><strong>Kỳ ${did(f.target_id)}</strong><span>${time(f.target_time)}</span></div>${componentRows(p,f)}</div><div class="prediction-meta"><p>${esc(f.note)}</p><p>${f.engine==='ml'?'Ensemble ML':'Mô hình thống kê'} · dữ liệu tới ${did(f.based_on_id)} · ${time(f.made_at)}</p></div>`:`<div class="empty-state"><h3>Chờ dự báo kỳ kế tiếp</h3><p>Chưa có bộ số đồng bộ với kỳ kết quả mới nhất. Dự báo sẽ xuất hiện sau khi mô hình cập nhật.</p><a class="text-link" href="forecast.html#${p.product}">Xem lịch sử phân tích ↗</a></div>`}</article>`;
+    return `<article class="prediction-card" data-product="${p.product}"><div class="card-header">${gameHeader(p)}<span class="pill ${f?.registered?'teal':'amber'}">${f?.registered?'ĐÃ ĐĂNG KÝ':'THAM KHẢO'}</span></div>${f?`<div class="card-body"><div class="draw-meta"><strong>Kỳ ${did(f.target_id)}</strong><span>${time(f.target_time)}</span></div>${componentRows(p,f)}</div><div class="prediction-meta"><p>${esc(f.note)}</p><p>${f.engine==='ml'?'Ensemble ML':'Mô hình thống kê'} · dữ liệu tới ${did(f.based_on_id)} · ${time(f.made_at)}</p></div>`:`<div class="empty-state"><h3>Chờ dự báo kỳ kế tiếp</h3><p>Chưa có bộ số đồng bộ với kỳ kết quả mới nhất. Dự báo sẽ xuất hiện sau khi mô hình cập nhật.</p><a class="text-link" id="history-${p.product}" href="forecast.html#${p.product}">Xem lịch sử phân tích ↗</a></div>`}</article>`;
   }
   function comparisonCard(p,c) {
     const pending = c.status==='pending';
@@ -72,13 +72,13 @@
       return `<div class="prediction-row"><div class="prediction-row-top"><span class="rank">${i+1}</span>${balls(nums,matched,{digit:isMax,keno:p.product==='keno',position:isBingo?t.position_matches:null})}</div>${t.special!=null?`<p class="scope-note">Số đặc biệt đã lưu: ${t.special}</p>`:''}<p class="match-caption">${esc(caption)}</p></div>`;
     }).join('')}</div></div><div class="comparison-bottom">Bản ${c.engine==='ml'?'ML':'thống kê'} đã đăng ký trước kỳ quay · đối chiếu tự động theo mã kỳ · hạng giải minh họa theo bộ số, không xác nhận tiền thưởng thực nhận.</div></article>`;
   }
-  function renderHero() {
-    const products = snapshot.products.filter(p=>p.latest);
+  function heroMarkup(data) {
+    const products = data.products.filter(p=>p.latest);
     const withPool = products.filter(p=>p.latest.prizes.some(t=>t.pool && t.value_vnd!=null));
     const p = withPool.find(p=>p.product==='mega645') || withPool[0] || products[0];
-    if (!p) { $('hero-panel').innerHTML='<p class="muted">Chờ kết quả đầu tiên</p>'; return; }
+    if (!p) return '<p class="muted">Chờ kết quả đầu tiên</p>';
     const r = p.latest, jackpot = r.prizes.find(t=>t.pool && t.value_vnd!=null);
-    $('hero-panel').innerHTML = `<div class="hero-panel-top"><span class="pill">${jackpot?'JACKPOT MỚI NHẤT':'THEO DÕI KỲ QUAY'}</span><span class="orbit-icon" aria-hidden="true">✦</span></div><p class="hero-game">${esc(short[p.product])} · kỳ ${did(r.draw_id)}</p><p class="jackpot-amount">${jackpot?`${number(jackpot.value_vnd)} <small>đ</small>`:'Kết quả đã về.'}</p><p class="scope-note">${jackpot?`${esc(jackpot.label)} · quỹ giải của kỳ ${time(r.draw_date,true)}`:'Bảng Jackpot của kỳ mới đang chờ cập nhật.'}</p>${p.product.startsWith('max')?balls(r.numbers.slice(0,2),[],{digit:true}):balls(r.numbers.slice(0,6))}<div class="hero-panel-bottom"><span>Nguồn: ${esc(r.source)}</span><a href="#results">Xem đầy đủ các giải ↗</a></div>`;
+    return `<div class="hero-panel-top"><span class="pill">${jackpot?'JACKPOT MỚI NHẤT':'THEO DÕI KỲ QUAY'}</span><span class="orbit-icon" aria-hidden="true">✦</span></div><p class="hero-game">${esc(short[p.product])} · kỳ ${did(r.draw_id)}</p><p class="jackpot-amount">${jackpot?`${number(jackpot.value_vnd)} <small>đ</small>`:'Kết quả đã về.'}</p><p class="scope-note">${jackpot?`${esc(jackpot.label)} · quỹ giải của kỳ ${time(r.draw_date,true)}`:'Bảng Jackpot của kỳ mới đang chờ cập nhật.'}</p>${p.product.startsWith('max')?balls(r.numbers.slice(0,2),[],{digit:true}):balls(r.numbers.slice(0,6))}<div class="hero-panel-bottom"><span>Nguồn: ${esc(r.source)}</span><a id="hero-results" href="#results">Xem đầy đủ các giải ↗</a></div>`;
   }
   function renderContent() {
     const current = visible();
@@ -88,22 +88,55 @@
     $('predictions-grid').innerHTML=current.map(predictionCard).join('');
     renderComparisons();
   }
-  function renderComparisons() {
+  function comparisonsMarkup(data=snapshot, choice=selected) {
     const filter = $('comparison-status').value;
-    const rows = visible().flatMap(p=>p.comparisons.map(c=>({p,c}))).filter(({c})=>filter==='all'||c.status===filter).sort((a,b)=>a.c.target_date.localeCompare(b.c.target_date)*-1 || b.c.target_id-a.c.target_id);
-    $('comparisons-list').innerHTML=rows.length?rows.map(({p,c})=>comparisonCard(p,c)).join(''):'<div class="empty-state"><h3>Chưa có kỳ phù hợp để đối chiếu</h3><p>Dự báo đã đăng ký sẽ được so sánh tự động khi kết quả của đúng kỳ quay về. Dự báo tham khảo không được tính vào lịch sử kiểm chứng.</p></div>';
+    const rows = visible(data,choice).flatMap(p=>p.comparisons.map(c=>({p,c}))).filter(({c})=>filter==='all'||c.status===filter).sort((a,b)=>a.c.target_date.localeCompare(b.c.target_date)*-1 || b.c.target_id-a.c.target_id);
+    return rows.length?rows.map(({p,c})=>comparisonCard(p,c)).join(''):'<div class="empty-state"><h3>Chưa có kỳ phù hợp để đối chiếu</h3><p>Dự báo đã đăng ký sẽ được so sánh tự động khi kết quả của đúng kỳ quay về. Dự báo tham khảo không được tính vào lịch sử kiểm chứng.</p></div>';
   }
-  function renderSnapshot() {
-    if (!snapshot.products.some(p=>p.product===selected)) selected='all';
+  function renderComparisons() { $('comparisons-list').innerHTML=comparisonsMarkup(); }
+  function renderSnapshot(next=snapshot) {
+    const choice=next.products.some(p=>p.product===selected)?selected:'all';
+    // Prepare every section before replacing the last good data or any live DOM.
+    const current=visible(next,choice);
+    const markup={
+      'hero-panel':heroMarkup(next),
+      stats:[['◈',`${next.stats.results}/7`,'Sản phẩm có kết quả'],['↗',next.stats.registered_next,'Dự báo kỳ tới đã đăng ký'],['✓',next.stats.compared_draws,'Kỳ đã tự động đối chiếu']].map(([icon,value,label])=>`<div class="stat"><span class="stat-icon" aria-hidden="true">${icon}</span><div><strong>${value}</strong><p>${label}</p></div></div>`).join(''),
+      'product-filters':[['all','Tất cả'],...next.products.map(p=>[p.product,short[p.product]])].map(([code,label])=>`<button class="filter-button" id="filter-${code}" data-product="${code}" type="button" aria-pressed="${choice===code}">${esc(label)}</button>`).join(''),
+      'results-grid':current.map(resultCard).join(''),
+      'predictions-grid':current.map(predictionCard).join(''),
+      'comparisons-list':comparisonsMarkup(next,choice)
+    };
     const focusId=document.activeElement?.id;
-    renderHero();
-    $('stats').innerHTML=[['◈',`${snapshot.stats.results}/7`,'Sản phẩm có kết quả'],['↗',snapshot.stats.registered_next,'Dự báo kỳ tới đã đăng ký'],['✓',snapshot.stats.compared_draws,'Kỳ đã tự động đối chiếu']].map(([icon,value,label])=>`<div class="stat"><span class="stat-icon" aria-hidden="true">${icon}</span><div><strong>${value}</strong><p>${label}</p></div></div>`).join('');
-    $('product-filters').innerHTML=[['all','Tất cả'],...snapshot.products.map(p=>[p.product,short[p.product]])].map(([code,label])=>`<button class="filter-button" id="filter-${code}" data-product="${code}" type="button" aria-pressed="${selected===code}">${esc(label)}</button>`).join('');
-    renderContent();
-    if (focusId) document.getElementById(focusId)?.focus({preventScroll:true});
+    for(const [id,html] of Object.entries(markup)) $(id).innerHTML=html;
+    snapshot=next; selected=choice;
+    for(const id of ['results-grid','predictions-grid']) $(id).classList.toggle('filtered',selected!=='all');
+    if(focusId) $(focusId)?.focus({preventScroll:true});
     updateStatus();
-    $('data-warning').hidden=!snapshot.warnings.length;
-    $('data-warning').textContent=snapshot.warnings.length?`Dữ liệu cần kiểm tra: ${snapshot.warnings.join(' · ')}`:'';
+    $('data-warning').hidden=!next.warnings.length;
+    $('data-warning').textContent=next.warnings.length?`Dữ liệu cần kiểm tra: ${next.warnings.join(' · ')}`:'';
+  }
+  function validateSnapshot(data) {
+    const obj=v=>v!==null && typeof v==='object' && !Array.isArray(v);
+    const str=v=>typeof v==='string';
+    const int=v=>Number.isSafeInteger(v) && v>=0;
+    const stamp=v=>str(v) && Number.isFinite(Date.parse(v));
+    const date=v=>str(v) && /^\d{4}-\d{2}-\d{2}$/.test(v) && stamp(v);
+    const array=(v,test)=>Array.isArray(v) && v.every(test);
+    const nullable=(v,test)=>v==null || test(v);
+    const moneyValue=v=>Number.isFinite(v) && v>=0;
+    const probability=v=>moneyValue(v) && v<=1;
+    const numbers=v=>array(v,n=>int(n)||str(n)&&/^\d{3}$/.test(n));
+    const catalogue=t=>obj(t) && str(t.label) && str(t.condition) && nullable(t.value_vnd,moneyValue) && nullable(t.note,str) && nullable(t.product,str) && nullable(t.value_text,str);
+    const result=(r,code)=>obj(r) && int(r.draw_id) && stamp(r.draw_date) && numbers(r.numbers) && nullable(r.bonus,int) && ['day','second'].includes(r.time_precision) && str(r.source) && str(r.official_url) && array(r.prizes,t=>obj(t)&&str(t.label)&&(code.startsWith('max')?numbers(t.numbers):nullable(t.value_vnd,moneyValue)&&nullable(t.winners,int))) && obj(r.facts) && (code!=='keno'||['large','small','even','odd'].every(k=>int(r.facts[k]))) && (code!=='bingo18'||int(r.facts.sum)&&str(r.facts.size)&&obj(r.facts.multiplicity)&&Object.values(r.facts.multiplicity).every(int));
+    const forecast=f=>obj(f) && int(f.target_id) && int(f.based_on_id) && stamp(f.made_at) && nullable(f.target_time,stamp) && nullable(f.target_date,date) && str(f.engine) && typeof f.registered==='boolean' && str(f.note) && array(f.components,c=>obj(c)&&str(c.name)&&array(c.top,t=>obj(t)&&numbers(t.numbers)&&nullable(t.p_model,probability)&&nullable(t.p_fair,probability)));
+    const ticket=(t,code)=>obj(t) && numbers(t.numbers) && (code.startsWith('max')?str(t.symbol)&&int(t.hits)&&array(t.tiers,str):code==='bingo18'?int(t.position_hits)&&int(t.multiset_hits)&&array(t.position_matches,b=>typeof b==='boolean')&&typeof t.sum_match==='boolean'&&typeof t.exact==='boolean':int(t.hits)&&array(t.matched_numbers,int)&&typeof t.bonus_hit==='boolean'&&nullable(t.special,int)&&nullable(t.tier,str));
+    const comparison=(c,code)=>obj(c) && int(c.target_id) && date(c.target_date) && stamp(c.made_at) && str(c.engine) && ['pending','matched','date_mismatch'].includes(c.status) && (c.status!=='matched'||result(c.result,code)&&array(c.tickets,t=>ticket(t,code)));
+    if(!obj(data)||data.schema_version!==1||!stamp(data.generated_at)||Date.parse(data.generated_at)>Date.now()+300000||!obj(data.stats)||!['products','results','registered_next','compared_draws'].every(k=>int(data.stats[k]))||!array(data.warnings,str)||!Array.isArray(data.products)||data.products.length!==7) throw new Error('schema');
+    const codes=new Set();
+    for(const p of data.products) {
+      if(!obj(p)||!Object.hasOwn(short,p.product)||codes.has(p.product)||!str(p.schedule)||!nullable(p.latest,r=>result(r,p.product))||!array(p.draws,r=>result(r,p.product))||!array(p.prize_catalogue,catalogue)||!nullable(p.next_forecast,forecast)||!array(p.comparisons,c=>comparison(c,p.product))) throw new Error('schema');
+      codes.add(p.product);
+    }
   }
   function updateStatus(message) {
     const age=(Date.now()-new Date(snapshot.generated_at).getTime())/3600000;
@@ -135,9 +168,9 @@
       const response=await fetch(`data/dashboard.json?t=${Date.now()}`,{cache:'no-store',signal:AbortSignal.timeout(15000)});
       if (!response.ok) throw new Error('http');
       const next=await response.json();
-      if (next.schema_version!==1 || !Array.isArray(next.products) || !next.stats || !next.generated_at) throw new Error('schema');
+      validateSnapshot(next);
       if (new Date(next.generated_at)>=new Date(snapshot.generated_at)) {
-        if (next.generated_at!==snapshot.generated_at) { snapshot=next; renderSnapshot(); }
+        if (next.generated_at!==snapshot.generated_at) renderSnapshot(next);
         else updateStatus(manual?`Đã kiểm tra · bản mới nhất ${time(snapshot.generated_at)} (giờ VN)`:undefined);
       }
     } catch { updateStatus(`Chưa lấy được bản mới · giữ dữ liệu ${time(snapshot.generated_at)} (giờ VN). Sẽ tự thử lại.`); }

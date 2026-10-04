@@ -81,8 +81,9 @@ def test_site_build(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     out = tmp_path / "site"
     r = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_site.py"), "--out", str(out), "--dir", str(fdir)], capture_output=True, text=True, env={**os.environ, "PYTHONUTF8": "1", "PYTHONPATH": os.pathsep.join([str(ROOT / "src"), os.environ.get("PYTHONPATH", "")])})
     assert r.returncode == 0, r.stderr
-    page = (out / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="vi">' in page and "Max 3D Pro" in page and "Lotto 5/35" in page and "<script" not in page
+    page = (out / "forecast.html").read_text(encoding="utf-8")
+    assert '<html lang="vi">' in page and "Max 3D Pro" in page and "Lotto 5/35" in page
+    assert (out / "index.html").exists() and (out / "data" / "dashboard.json").exists()
     summary = json.loads((out / "data" / "summary.json").read_text(encoding="utf-8"))
     assert [p["product"] for p in summary["products"]] == ["lotto535", "max3dpro"]
     assert summary["products"][1]["evidence_found"] is True

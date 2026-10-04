@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F4F5FF">
+<title>VLM · Kết quả, dự báo & đối chiếu Vietlott</title>
+<meta name="description" content="Theo dõi kết quả và cơ cấu giải Vietlott, các bộ số dự báo kỳ tiếp theo và lịch sử tự động đối chiếu dự báo đã ghi trước kỳ quay.">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/dashboard.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#results">Đến nội dung chính</a>
+<header class="site-header">
+<div class="nav-inner">
+<a class="brand" href="index.html" aria-label="VLM · Trang chính"><span class="brand-mark">V</span><span>VLM<small>VIETLOTT MASTER</small></span></a>
+<button class="icon-button menu-toggle" type="button" aria-label="Mở menu" aria-controls="main-nav" aria-expanded="false">☰</button>
+<nav id="main-nav" aria-label="Điều hướng chính">
+<a class="nav-link active" href="#results">Kết quả</a><a class="nav-link" href="#predictions">Dự báo kỳ tới</a><a class="nav-link" href="#comparisons">Đối chiếu</a><a class="nav-link" href="forecast.html">Phân tích</a>
+</nav>
+<button class="icon-button theme-toggle" type="button" aria-label="Chuyển giao diện tối" title="Đổi sáng / tối">◐</button>
+</div>
+</header>
+<main class="home-main">
+<section class="hero" aria-labelledby="hero-title">
+<div class="hero-copy"><p class="eyebrow"><span class="status-dot"></span> KẾT QUẢ · DỰ BÁO · KIỂM CHỨNG</p><h1 id="hero-title">Mỗi kỳ quay.<br><span>Một góc nhìn rõ hơn.</span></h1><p class="hero-description">Kết quả Vietlott, cơ cấu giải và bộ số kỳ tới — cùng một nơi. Mọi dự báo đã đăng ký đều được đối chiếu khi kết quả mới về.</p><div class="hero-actions"><a class="button primary" href="#predictions">Xem dự báo kỳ tới <span aria-hidden="true">↗</span></a><a class="button secondary" href="#results">Tra cứu kết quả <span aria-hidden="true">↓</span></a></div><p class="hero-footnote">Dữ liệu có nguồn dẫn · Lưu dự báo trước kỳ quay · Đối chiếu tự động</p></div>
+<div class="hero-panel" id="hero-panel" aria-label="Giải thưởng mới nhất"><div class="hero-panel-top"><span class="pill">JACKPOT MỚI NHẤT</span><span class="orbit-icon" aria-hidden="true">✦</span></div><p class="muted">Đang tải dữ liệu giải thưởng…</p></div>
+</section>
+<div class="update-bar"><div><span class="status-dot"></span><span id="update-status" role="status" aria-live="polite">Đang đọc bản cập nhật…</span></div><button id="refresh" class="text-button" type="button"><span aria-hidden="true">↻</span> Làm mới</button></div>
+<div id="data-warning" class="data-warning" role="status" hidden></div>
+<section class="stats-grid" id="stats" aria-label="Tổng quan theo dõi"></section>
+<div class="filter-bar"><div><span class="eyebrow">BẢNG THEO DÕI VLM</span><p>Chọn sản phẩm để xem cùng lúc kết quả, dự báo và đối chiếu.</p></div><div id="product-filters" class="product-filters" role="group" aria-label="Lọc sản phẩm"></div></div>
+<section id="results" aria-labelledby="results-title"><div class="section-heading"><div><p class="eyebrow">01 / KẾT QUẢ & GIẢI THƯỞNG</p><h2 id="results-title">Kỳ quay mới nhất</h2><p>Đủ các nhóm giải. Mỗi kỳ đều kèm thời điểm và nguồn dữ liệu.</p></div><a class="text-link" href="https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong" target="_blank" rel="noopener noreferrer">Tra cứu tại Vietlott <span aria-hidden="true">↗</span></a></div><div class="results-grid" id="results-grid"></div></section>
+<section id="predictions" aria-labelledby="predictions-title"><div class="section-heading"><div><p class="eyebrow">02 / HƯỚNG ĐẾN KỲ TIẾP THEO</p><h2 id="predictions-title">Bộ số dự báo kỳ tới</h2><p>Phân biệt rõ dự báo đã đăng ký và bộ số tham khảo của mô hình.</p></div><a class="text-link" href="forecast.html">Xem phân tích mô hình <span aria-hidden="true">↗</span></a></div><p class="method-note"><span aria-hidden="true">ⓘ</span> Điểm xác suất là đầu ra thống kê, không phải cam kết trúng thưởng. Thứ hạng có thể gần đúng; chưa có bằng chứng mô hình dự đoán tốt hơn ngẫu nhiên.</p><div class="prediction-grid" id="predictions-grid"></div></section>
+<section id="comparisons" aria-labelledby="comparisons-title"><div class="section-heading"><div><p class="eyebrow">03 / DỰ BÁO ĐÃ RA SAO?</p><h2 id="comparisons-title">Đối chiếu với kết quả</h2><p>Bộ số đã lưu trước kỳ quay được giữ nguyên. Chỉ so với đúng mã kỳ và ngày quay.</p></div><label class="select-label" for="comparison-status">Trạng thái<select id="comparison-status"><option value="all">Tất cả trạng thái</option><option value="matched">Đã đối chiếu</option><option value="pending">Chờ kết quả</option><option value="date_mismatch">Cần kiểm tra ngày</option></select></label></div><div class="comparison-legend"><span><i class="legend-dot hit-dot"></i> Số trùng kết quả</span><span><i class="legend-dot"></i> Số dự báo</span><span>Đối chiếu bộ số, không xác nhận vé đã mua.</span></div><div id="comparisons-list" class="comparisons-list"></div></section>
+<section class="closing-card"><div><p class="eyebrow">HIỂU DỮ LIỆU TRƯỚC KHI CHỌN SỐ</p><h2>Đi sâu vào từng dự báo.</h2><p>Xem xác suất, lịch sử học và bằng chứng thống kê của từng mô hình.</p></div><a class="button primary" href="forecast.html">Mở trang phân tích <span aria-hidden="true">↗</span></a></section>
+</main>
+<footer class="site-footer"><div><a class="brand" href="index.html"><span class="brand-mark">V</span><span>VLM<small>VIETLOTT MASTER</small></span></a><p>Phân tích minh bạch. Kiểm chứng theo từng kỳ quay.</p></div><div class="footer-links"><a href="forecast.html">Phân tích</a><a href="data/dashboard.json">Dữ liệu JSON</a><a href="https://github.com/beuvivu/VLM" target="_blank" rel="noopener noreferrer">Mã nguồn ↗</a></div><p class="footer-note">VLM là dự án phân tích độc lập. Kết quả được tổng hợp từ Vietlott và các kho dữ liệu cộng đồng; nguồn từng kỳ được hiển thị trên thẻ. Lịch chạy GitHub có thể trễ; thời gian cập nhật cho biết độ mới của bản dữ liệu.</p></footer>
+<noscript><p class="method-note">Bật JavaScript để dùng bộ lọc và tự làm mới. Bạn vẫn có thể đọc <a href="forecast.html">trang phân tích</a> hoặc <a href="data/dashboard.json">dữ liệu đầy đủ</a>.</p></noscript>
+<script type="application/json" id="initial-data">__DASHBOARD_JSON__</script>
+</body>
+</html>

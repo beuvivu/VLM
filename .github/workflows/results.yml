@@ -110,7 +110,7 @@ jobs:
           key: vqe-state-${{ github.run_id }}
       - name: Báo cáo cập nhật
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vietlott-results-status
           path: |

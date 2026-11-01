@@ -5,13 +5,16 @@ services:
     build: .
     image: vietlott-quant-engine:latest
     ports:
-      - "8000:8000"
+      # Chỉ máy chủ này: API không có đăng nhập cho lệnh đọc, và lệnh ghi chỉ có token khi
+      # VQE_API_TOKEN được đặt. Mở ra mạng thì đặt sau reverse proxy có xác thực.
+      - "127.0.0.1:8000:8000"
     environment:
       VQE_SOURCE: auto                   # vietlott (Vietnamese IP only) → nhanaz → github_mirror (README §1.7)
       VQE_AUTO_UPDATE_ENABLED: "true"   # per-product windows, restart recovery, bounded retries
       VQE_HTTP_BACKEND: curl_cffi
       TZ: Asia/Ho_Chi_Minh
       VQE_LOG_LEVEL: INFO
+      VQE_API_TOKEN: ${VQE_API_TOKEN:-}
     volumes:
       - vqe-data:/app/data               # DuckDB file + Parquet exports
     restart: unless-stopped
@@ -25,16 +28,17 @@ services:
         condition: service_healthy
     environment:
       REFRESH_EVERY_SECONDS: "21600"
+      VQE_API_TOKEN: ${VQE_API_TOKEN:-}
     entrypoint:
       - /bin/sh
       - -c
       - |
         while true; do
           for g in mega645 power655 lotto535; do
-            curl -fsS --max-time 180 -X POST "http://api:8000/games/$$g/prizes/sync" -H 'Content-Type: application/json' -d '{"source":"auto"}' || echo "prize refresh $$g failed"
+            curl -fsS --max-time 180 -X POST "http://api:8000/games/$$g/prizes/sync" -H "Authorization: Bearer $$VQE_API_TOKEN" -H 'Content-Type: application/json' -d '{"source":"auto"}' || echo "prize refresh $$g failed"
           done
           for p in mega645 power655 lotto535 keno bingo18 max3d max3dpro; do
-            curl -fsS --max-time 600 "http://api:8000/forecast/$$p?record=true" > /dev/null || echo "forecast $$p failed"
+            curl -fsS --max-time 600 -H "Authorization: Bearer $$VQE_API_TOKEN" "http://api:8000/forecast/$$p?record=true" > /dev/null || echo "forecast $$p failed"
           done
           sleep "$$REFRESH_EVERY_SECONDS"
         done

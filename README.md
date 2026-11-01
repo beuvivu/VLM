@@ -671,6 +671,11 @@ vietlott serve --port 8000        # hoặc: uvicorn vietlott_engine.api.main:app
 # Swagger UI: http://localhost:8000/docs
 ```
 
+API mặc định chỉ nghe ở `127.0.0.1`. Khi đặt `VQE_API_TOKEN`, mở `/docs`,
+chọn **Authorize** và nhập giá trị token để dùng **Try it out** cho các thao
+tác được bảo vệ. Swagger tự gửi đầu mục `Authorization: Bearer …`. Các lệnh
+đọc công khai như `/health` và scoreboard vẫn dùng được khi chưa nhập token.
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | GET | `/health`, `/games` | Trạng thái, luật chơi (3 game), xác suất từng giải |

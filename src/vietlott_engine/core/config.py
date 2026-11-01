@@ -59,7 +59,14 @@ class Settings(BaseSettings):
 
     # --- API
     api_title: str = "Vietlott Quant Engine"
-    cors_origins: list[str] = ["*"]
+    # Không mở CORS cho mọi origin: API có lệnh ghi (sync, fit, record=true), nên "*" cho phép
+    # bất kỳ trang nào người dùng đang mở gọi vào API chạy trên máy/mạng nội bộ của họ.
+    # Cần thì khai rõ, ví dụ VQE_CORS_ORIGINS='["https://example.org"]'.
+    cors_origins: list[str] = []
+    # Đặt thì mọi lệnh ghi (POST/PUT/PATCH/DELETE và ?record=true) phải gửi
+    # "Authorization: Bearer <token>". Đầu mục tuỳ biến buộc trình duyệt preflight, nên
+    # một <form> hay <img> ở trang lạ không còn kích hoạt được lệnh ghi.
+    api_token: str | None = None
     max_backtest_strategies: int = 8
     max_backtest_tickets: int = 50
     sync_on_startup: bool = False

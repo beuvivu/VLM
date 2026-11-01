@@ -890,6 +890,8 @@ def cmd_doctor(a: argparse.Namespace) -> int:
 def cmd_serve(a: argparse.Namespace) -> int:
     import uvicorn
 
+    if a.host not in {"127.0.0.1", "localhost", "::1"} and not get_settings().api_token:
+        print(f"⚠ API nghe trên {a.host} mà không có VQE_API_TOKEN: ai vào được mạng là ghi được.", file=sys.stderr)
     uvicorn.run("vietlott_engine.api.main:app", host=a.host, port=a.port, workers=a.workers, log_level="info")
     return 0
 
@@ -1075,7 +1077,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(func=cmd_rolldown)
 
     s = sub.add_parser("serve", help="run the FastAPI server")
-    s.add_argument("--host", default="0.0.0.0")
+    s.add_argument("--host", default="127.0.0.1", help="mặc định chỉ máy này; mở ra mạng thì đặt VQE_API_TOKEN")
     s.add_argument("--port", type=int, default=8000)
     s.add_argument("--workers", type=int, default=1)
     s.set_defaults(func=cmd_serve)

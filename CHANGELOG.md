@@ -1,5 +1,20 @@
 # Nhật ký thay đổi
 
+## Chưa phát hành — API mặc định an toàn (đưa ngược từ bản engine trong kho VLA, 08-10-2026)
+
+- **CORS đóng mặc định** (`cors_origins = []`). Trước đây là `"*"`: API có lệnh ghi (`/sync`, `/fit`,
+  `?record=true`), nên bất kỳ trang web nào người dùng đang mở cũng gọi được API chạy trên máy họ.
+- **`VQE_API_TOKEN`.** Khi đặt, mọi POST/PUT/PATCH/DELETE, mọi `?record=` mà FastAPI đọc là True (`on`, `y`…,
+  đọc bằng chính `TypeAdapter(bool)`), và ba GET làm mới dự báo (`/forecast/{p}`, `/forecast/{p}/evidence`,
+  `/ml/forecast/{p}`) cùng hai GET huấn luyện GCN đều phải gửi `Authorization: Bearer`.
+  - Không đặt token thì lệnh ghi do trình duyệt gửi từ trang khác (`Sec-Fetch-Site` / `Origin`) bị 403. Client
+    cục bộ và trang `/docs` của chính API vẫn ghi được.
+  - Swagger có nút **Authorize** khi đặt token.
+- **Chỉ nghe loopback:** `vietlott serve` mặc định `127.0.0.1` (cảnh báo khi mở ra mạng mà không có token);
+  docker compose công bố `127.0.0.1:8000`, và bộ lập lịch gửi token.
+- CORS nằm NGOÀI middleware xác thực, nên phản hồi 401/403 vẫn mang đầu mục CORS cho trang được phép.
+- `tests/test_api_security.py` (48 phép kiểm). Đột biến "CORS `*`" và "serve `0.0.0.0`" đều làm nó đỏ.
+
 ## 4.0.0 — repo riêng, bộ cài hoàn chỉnh
 
 Tách khỏi VLA thành repo độc lập.

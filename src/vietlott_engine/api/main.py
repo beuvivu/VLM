@@ -1,6 +1,6 @@
 """FastAPI application factory.
 
-Run:  uvicorn vietlott_engine.api.main:app --host 0.0.0.0 --port 8000
+Run:  uvicorn vietlott_engine.api.main:app --host 127.0.0.1 --port 8000
 Docs: http://localhost:8000/docs
 """
 
@@ -10,12 +10,15 @@ from vietlott_engine import __version__
 
 import asyncio
 import contextlib
+import hmac
+import re
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import TypeAdapter, ValidationError
 
 from vietlott_engine.api.deps import AppState
 from vietlott_engine.api.routers import analytics, catalog, data, forecast, inference, max3d, products, strategy
@@ -134,6 +137,68 @@ def create_app(settings: Settings | None = None, repository: DrawRepository | No
         ),
         lifespan=lifespan,
     )
+    _MUTATING = {"POST", "PUT", "PATCH", "DELETE"}
+    # GET làm mới dự báo ghi trạng thái; GET GCN huấn luyện lại ngay trong lượt yêu cầu.
+    # Cả hai cần cùng cổng token/origin để khách lạ không tiêu CPU qua đường chỉ đọc.
+    # /scoreboard chỉ đọc sổ nên không thuộc cổng này.
+    _PROTECTED_GET = re.compile(
+        r"^/(?:(?:ml/)?forecast/[^/]+(?:/evidence)?|games/[^/]+/ml/gcn/(?:skill|next))/?$"
+    )
+    _BOOL = TypeAdapter(bool)
+
+    def _asks_to_record(request: Request) -> bool:
+        """Đọc ``record`` ĐÚNG như FastAPI đọc tham số bool (pydantic): "on", "y", "t"… cũng là
+        True, không chỉ "1"/"true"/"yes". Xét MỌI lần lặp của tham số. Giá trị không đọc được
+        (FastAPI sẽ trả 422) vẫn tính là lệnh ghi: đóng an toàn."""
+        for value in request.query_params.getlist("record"):
+            try:
+                if _BOOL.validate_python(value):
+                    return True
+            except ValidationError:
+                return True
+        return False
+
+    def _sent_by_another_site(request: Request) -> bool:
+        """Trình duyệt đánh dấu yêu cầu đến từ một trang khác (Fetch Metadata, hoặc Origin lạ).
+
+        Client không phải trình duyệt (scheduler, curl) không gửi hai đầu mục này nên không bị
+        ảnh hưởng. Cùng trang (Swagger UI ở /docs do chính API phục vụ) và Origin có trong
+        VQE_CORS_ORIGINS là được tin."""
+        site = request.headers.get("sec-fetch-site")
+        if site in {"same-origin", "none"}:
+            return False
+        origin = request.headers.get("origin")
+        if origin is not None:
+            own = f"{request.url.scheme}://{request.url.netloc}"
+            return origin != own and origin not in settings.cors_origins
+        return site is not None
+
+    @app.middleware("http")
+    async def _require_token_for_writes(request: Request, call_next):  # type: ignore[no-untyped-def]
+        """Lệnh ghi cần token khi VQE_API_TOKEN được đặt; lệnh đọc giữ nguyên.
+
+        Không đặt token thì lệnh ghi vẫn mở cho client cục bộ, nhưng KHÔNG cho trình duyệt gửi
+        từ trang khác: CORS đóng chỉ ngăn đọc phản hồi, còn một "simple request" như
+        ``GET /forecast/mega645?record=true`` từ trang lạ vẫn được gửi đi."""
+        token = settings.api_token
+        # Cùng đường dẫn tương đối mà router ASGI dùng: mount/reverse proxy có
+        # root_path không được che một GET làm mới trạng thái khỏi xác thực.
+        path = request.scope["path"]
+        root_path = request.scope.get("root_path", "")
+        if root_path and path.startswith(root_path + "/"):
+            path = path[len(root_path):]
+        writes = (request.method in _MUTATING or _asks_to_record(request)
+                  or (request.method in {"GET", "HEAD"} and _PROTECTED_GET.match(path) is not None))
+        if writes and token:
+            supplied = request.headers.get("authorization", "")
+            if not hmac.compare_digest(supplied.encode(), f"Bearer {token}".encode()):
+                return JSONResponse(status_code=401, content={"error": "Unauthorized", "detail": "missing or invalid API token"})
+        elif writes and _sent_by_another_site(request):
+            return JSONResponse(status_code=403, content={"error": "Forbidden", "detail": "cross-site write without an API token"})
+        return await call_next(request)
+
+    # CORS thêm SAU cùng nên nằm NGOÀI cùng: phản hồi 401/403 trả sớm ở trên vẫn mang đầu mục
+    # CORS cho trang được phép, thay vì thành lỗi mạng mờ.
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_methods=["*"], allow_headers=["*"])
 
     @app.exception_handler(VQEError)
@@ -150,6 +215,26 @@ def create_app(settings: Settings | None = None, repository: DrawRepository | No
     app.include_router(catalog.router)
     app.include_router(forecast.router)
     app.include_router(ml_router)
+    if settings.api_token:
+        base_openapi = app.openapi
+
+        def _openapi_with_bearer() -> dict:
+            """Cho Swagger gửi token theo đúng các thao tác middleware bảo vệ."""
+            schema = base_openapi()
+            schema.setdefault("components", {}).setdefault("securitySchemes", {})["VqeBearer"] = {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "Nhập VQE_API_TOKEN trong Authorize; Swagger tự thêm tiền tố Bearer.",
+            }
+            for path, operations in schema["paths"].items():
+                for method, operation in operations.items():
+                    if method.upper() in _MUTATING or (
+                        method.upper() in {"GET", "HEAD"} and _PROTECTED_GET.match(path) is not None
+                    ):
+                        operation["security"] = [{"VqeBearer": []}]
+            return schema
+
+        app.openapi = _openapi_with_bearer
     return app
 
 
